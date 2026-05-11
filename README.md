@@ -1,31 +1,20 @@
-# RepositorioTemplate
+# Jogo de Arquitetura (Sem nome definido ainda)
 
-Repositório que deve ser utilizado como template inicial pelos grupos da matéria de Arquitetura e Desenho de Software.
+Repositorio dedicado apenas ao projeto do jogo em Godot.
 
-## Introdução
+## Estrutura
 
-Este repositório traz um template de repo de documentação a ser seguido pelos grupos de arquitetura e desenho de software.
+- `jogo/` contem o projeto do Godot
+- `jogo/scenes/` contem as cenas do jogo
+- `jogo/scripts/` contem os scripts GDScript
+- `jogo/art/` contem os assets (sprites e tilesets)
 
-## Tecnologia
+## Requisitos
 
-A geração do site estático é realizada utilizando o [docsify](https://docsify.js.org/).
+- Godot 4.6.x instalado
 
-```shell
-"Docsify generates your documentation website on the fly. Unlike GitBook, it does not generate static html files. Instead, it smartly loads and parses your Markdown files and displays them as a website. To start using it, all you need to do is create an index.html and deploy it on GitHub Pages."
-```
+## Como executar
 
-### Instalando o docsify
-
-Execute o comando:
-
-```shell
-npm i docsify-cli -g
-```
-
-### Executando localmente
-
-Para iniciar o site localmente, utilize o comando:
-
-```shell
-docsify serve ./docs
-```
+1. Abra o Godot.
+2. Clique em "Import" e selecione o arquivo `jogo/project.godot`.
+3. Pressione Play para rodar a cena principal.
