@@ -10,10 +10,17 @@ config_version=5
 
 [application]
 
-config/name="Vestibular Infinito"
-run/main_scene="res://scenes/world/test_room.tscn"
+config/name="Jogo de Arquitetura"
+run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+SignalBus="*res://scripts/autoloads/signal_bus.gd"
+GameManager="*res://scripts/autoloads/game_manager.gd"
+AudioManager="*res://scenes/autoloads/audio_manager.tscn"
+StudentProfileRegistry="*res://scripts/resources/student_profile_registry.gd"
 
 [display]
 

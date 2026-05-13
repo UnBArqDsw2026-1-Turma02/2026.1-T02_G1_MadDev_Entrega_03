@@ -2,6 +2,11 @@
 
 [ext_resource type="TileSet" uid="uid://cobyf3dg5qvbm" path="res://art/tilesets/room.tres" id="1_tileset"]
 [ext_resource type="PackedScene" uid="uid://c18bbn5qtne5r" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://c7a3ftgvd0age" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="Script" uid="uid://broomvalid001" path="res://scripts/world/room_validator.gd" id="4_ytumw"]
+[ext_resource type="PackedScene" uid="uid://cv0xhs4eb6465" path="res://scenes/world/door.tscn" id="5_fc6vu"]
+[ext_resource type="PackedScene" uid="uid://bpausemenu001" path="res://scenes/ui/pause_menu.tscn" id="6_pause"]
+[ext_resource type="PackedScene" uid="uid://djf6b503y8c2n" path="res://scenes/enemies/enemy.tscn" id="7_u3u0o"]
 
 [node name="TestRoom" type="Node2D" unique_id=2062937570]
 
@@ -13,3 +18,22 @@ tile_set = ExtResource("1_tileset")
 position = Vector2(152, 112)
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1291745636]
+
+[node name="HUDContent" parent="HUD" unique_id=1507246780 instance=ExtResource("3_hud")]
+
+[node name="RoomValidator" type="Node" parent="." unique_id=356141330]
+script = ExtResource("4_ytumw")
+managed_door_ids = Array[String](["", "", "", ""])
+
+[node name="Door" parent="." unique_id=2127026036 instance=ExtResource("5_fc6vu")]
+position = Vector2(-44, -106)
+
+[node name="PauseLayer" type="CanvasLayer" parent="." unique_id=991234567]
+layer = 10
+
+[node name="PauseMenu" parent="PauseLayer" unique_id=881234567 instance=ExtResource("6_pause")]
+
+[node name="Enemy" parent="." unique_id=1129722874 instance=ExtResource("7_u3u0o")]
+position = Vector2(9, 33)
+
+[connection signal="health_changed" from="Player" to="HUD/HUDContent" method="on_player_health_changed"]

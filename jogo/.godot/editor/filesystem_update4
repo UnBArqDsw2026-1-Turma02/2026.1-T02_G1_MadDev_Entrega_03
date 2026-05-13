@@ -1,0 +1,4 @@
+res://scenes/ui/main_menu.tscn
+res://scenes/world/test_room.tscn
+res://art/tilesets/room.tres
+res://scenes/enemies/enemy.tscn
