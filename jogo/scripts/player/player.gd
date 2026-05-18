@@ -53,6 +53,8 @@ var _can_dash: bool = true
 # ---------------------------------------------------------------------------
 func _ready() -> void:
 	current_health = max_health
+	health_changed.emit(current_health, max_health)
+	SignalBus.player_health_changed.emit(current_health, max_health)
 
 
 func _physics_process(_delta: float) -> void:
