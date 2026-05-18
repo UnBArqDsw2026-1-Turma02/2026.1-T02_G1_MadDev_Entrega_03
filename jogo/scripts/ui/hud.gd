@@ -12,9 +12,21 @@ extends Control
 @onready var health_label: Label = $VBoxContainer/HealthRow/HealthLabel
 
 
+func _ready() -> void:
+	GameMediator.register(GameMediator.EVENT_PLAYER_HEALTH_CHANGED, _on_mediator_player_health_changed)
+
+
+func _exit_tree() -> void:
+	GameMediator.unregister(GameMediator.EVENT_PLAYER_HEALTH_CHANGED, _on_mediator_player_health_changed)
+
+
 # ---------------------------------------------------------------------------
 # Observer — receptores de eventos (conectar via inspetor no SignalBus)
 # ---------------------------------------------------------------------------
+func _on_mediator_player_health_changed(_sender: Object, _event: StringName, data: Dictionary) -> void:
+	on_player_health_changed(data.get("new_health", 0), data.get("max_health", 0))
+
+
 func on_player_health_changed(new_health: int, max_health: int) -> void:
 	if health_label == null:
 		return
