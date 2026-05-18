@@ -1,6 +1,5 @@
 ## Object Pool Pattern — enable()/disable() permitem reusar instâncias sem queue_free().
 ## Bridge Pattern   — lógica de dano separada da representação visual (Sprite2D).
-## Conexões de sinais (ex: body_entered → aplica dano) devem ser feitas via inspetor.
 extends Area2D
 
 # ---------------------------------------------------------------------------
@@ -11,8 +10,8 @@ extends Area2D
 @export var lifetime: float = 3.0
 
 var direction: Vector2 = Vector2.RIGHT
-
 var _elapsed: float = 0.0
+var _pool: Node = null  
 
 
 # ---------------------------------------------------------------------------
@@ -29,11 +28,22 @@ func enable(spawn_position: Vector2, spawn_direction: Vector2) -> void:
 
 
 func disable() -> void:
+	print("Projétil ", name, " desativado! Pool: ", _pool != null)
 	hide()
 	set_process(false)
 	monitoring = false
 	monitorable = false
+	
+	if _pool != null and _pool.has_method("return_projectile"):
+		print("Chamando return_projectile para ", name)
+		_pool.return_projectile(self)
+	else:
+		print("ERRO: Pool não encontrado ou método inexistente!")
 
+
+func set_pool(pool: Node) -> void:
+	_pool = pool
+	print("Projétil ", name, " conectado ao pool")  # DEBUG
 
 # ---------------------------------------------------------------------------
 # Movimento e lifetime
@@ -46,7 +56,8 @@ func _process(delta: float) -> void:
 	position += direction * speed * delta
 	_elapsed += delta
 	if _elapsed >= lifetime:
-		disable()
+		print("Projétil ", name, " expirou!")  # DEBUG
+		disable() 
 
 
 # ---------------------------------------------------------------------------
@@ -55,4 +66,4 @@ func _process(delta: float) -> void:
 func apply_damage_to(target: Node) -> void:
 	if target.has_method("take_damage"):
 		target.take_damage(damage)
-	disable()
+	disable()  

@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://cv0xhs4eb6465" path="res://scenes/world/door.tscn" id="5_fc6vu"]
 [ext_resource type="PackedScene" uid="uid://bpausemenu001" path="res://scenes/ui/pause_menu.tscn" id="6_pause"]
 [ext_resource type="PackedScene" uid="uid://djf6b503y8c2n" path="res://scenes/enemies/enemy.tscn" id="7_u3u0o"]
+[ext_resource type="Script" uid="uid://cyeaw60efjvl4" path="res://scripts/world/projectile_pool.gd" id="8_vnu35"]
+[ext_resource type="Script" uid="uid://lr14jljvcf4l" path="res://scenes/test_pool.gd" id="9_wb54u"]
 
 [node name="TestRoom" type="Node2D" unique_id=2062937570]
 
@@ -35,5 +37,12 @@ layer = 10
 
 [node name="Enemy" parent="." unique_id=1129722874 instance=ExtResource("7_u3u0o")]
 position = Vector2(9, 33)
+
+[node name="ProjectilePool" type="Node" parent="." unique_id=135487366]
+script = ExtResource("8_vnu35")
+
+[node name="TestPool" type="Node" parent="." unique_id=1154113550 node_paths=PackedStringArray("pool")]
+script = ExtResource("9_wb54u")
+pool = NodePath("../ProjectilePool")
 
 [connection signal="health_changed" from="Player" to="HUD/HUDContent" method="on_player_health_changed"]
