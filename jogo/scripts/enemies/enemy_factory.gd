@@ -8,7 +8,8 @@ extends Node
 # ---------------------------------------------------------------------------
 const ENEMY_SCENES: Dictionary = {
 	&"basic": preload("res://scenes/enemies/enemy.tscn"),
-	&"ranged": preload("res://scenes/enemies/enemy_ranged.tscn"),  # ← NOVO!
+	&"melee": preload("res://scenes/enemies/enemy.tscn"),
+	&"ranged": preload("res://scenes/enemies/enemy_ranged.tscn"),
 }
 
 
@@ -16,23 +17,30 @@ const ENEMY_SCENES: Dictionary = {
 # Factory Method - cria um inimigo pelo tipo
 # ---------------------------------------------------------------------------
 static func create(type: StringName) -> CharacterBody2D:
-	# Verifica se o tipo existe
 	if not ENEMY_SCENES.has(type):
 		push_error("EnemyFactory: tipo desconhecido '%s'" % type)
 		return null
 	
-	# Instancia a cena
 	var enemy_scene: PackedScene = ENEMY_SCENES[type]
 	var enemy: CharacterBody2D = enemy_scene.instantiate()
 	
-	# Configurações específicas por tipo (opcional)
+	# Configura propriedades baseado no tipo (sem anexar script)
 	match type:
-		&"basic":
-			# Básico usa valores padrão da cena
-			pass
+		&"melee":
+			enemy.move_speed = 80.0
+			enemy.attack_damage = 8
+			enemy.max_health = 40
+		
 		&"ranged":
-			# Ranged pode ter configurações extras
-			# Ex: enemy.attack_range = 100.0
-			pass
+			enemy.move_speed = 40.0
+			enemy.attack_damage = 5
+			enemy.max_health = 25
+		
+		&"basic":
+			enemy.move_speed = 60.0
+			enemy.attack_damage = 5
+			enemy.max_health = 30
+	
+	enemy.current_health = enemy.max_health
 	
 	return enemy
