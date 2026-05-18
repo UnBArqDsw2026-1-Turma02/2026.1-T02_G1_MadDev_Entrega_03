@@ -68,3 +68,39 @@ func _validate() -> void:
 
 func _is_room_cleared() -> bool:
 	return _total_enemies > 0 and _enemies_killed >= _total_enemies
+
+
+# ---------------------------------------------------------------------------
+# Factory Method - criar inimigos usando a fábrica
+# ---------------------------------------------------------------------------
+func spawn_enemy(enemy_type: StringName, position: Vector2) -> CharacterBody2D:
+	var enemy: CharacterBody2D = EnemyFactory.create(enemy_type)
+	if enemy == null:
+		return null
+	
+	# Adiciona à cena
+	add_child(enemy)
+	enemy.global_position = position
+	
+	# Adiciona ao grupo para o validador encontrar
+	enemy.add_to_group("enemies")
+	
+	# Incrementa contador de inimigos
+	_total_enemies += 1
+	
+	return enemy
+
+
+# ---------------------------------------------------------------------------
+# Criar uma sala completa com vários inimigos
+# ---------------------------------------------------------------------------
+func setup_combat_room(enemy_list: Array[Dictionary]) -> void:
+	# enemy_list exemplo: [
+	#     {"type": &"basic", "pos": Vector2(100, 100)},
+	#     {"type": &"basic", "pos": Vector2(200, 150)},
+	# ]
+	
+	for enemy_data in enemy_list:
+		var enemy_type: StringName = enemy_data.get("type", &"basic")
+		var pos: Vector2 = enemy_data.get("pos", Vector2.ZERO)
+		spawn_enemy(enemy_type, pos)
