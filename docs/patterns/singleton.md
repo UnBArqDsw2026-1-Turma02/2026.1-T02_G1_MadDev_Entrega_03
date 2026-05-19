@@ -1,11 +1,4 @@
 # Padrão Singleton
-
-## Versionamento
-
-| Versão | Data       | Descrição                        | Autor(es)                         |
-|--------|------------|----------------------------------|-----------------------------------|
-| 1.0    | 18/05/2026 | Criação da documentação          | Philipe Morais, Pietro Calegari   |
-
 ---
 
 ## 1. Introdução
@@ -121,10 +114,10 @@ func _on_start_pressed() -> void:
 
 **Uso típico:**
 ```gdscript
-# player.gd — emissor
+# player.gd - emissor
 SignalBus.player_health_changed.emit(current_health, max_health)
 
-# hud.gd — receptor
+# hud.gd - receptor
 SignalBus.player_health_changed.connect(_on_player_health_changed)
 ```
 
@@ -154,10 +147,10 @@ AudioManager (Node)
 ### 3.4 StudentProfileRegistry
 
 **Arquivo:** `jogo/scripts/resources/student_profile_registry.gd`
-**Responsabilidade:** Cache de perfis de estudantes (personagens jogáveis). Implementa internamente o padrão **Multiton** — mantém uma instância por chave de perfil.
+**Responsabilidade:** Cache de perfis de estudantes (personagens jogáveis). Implementa internamente o padrão **Multiton** - mantém uma instância por chave de perfil.
 
 ```gdscript
-# Privado — não acessado por scripts externos
+# Privado - não acessado por scripts externos
 const _PROFILE_PATHS: Dictionary = {
     "Calouro":          "res://resources/profiles/calouro.tres",
     "Veterano":         "res://resources/profiles/veterano.tres",
@@ -173,7 +166,7 @@ var _cache: Dictionary = {}
 | `get_profile(name)` | Retorna perfil (carrega do disco na 1ª chamada, depois usa cache) |
 | `get_all_profiles()` | Retorna todos os perfis carregados |
 
-> **Nota:** Embora registrado como Singleton via Autoload, o `StudentProfileRegistry` implementa internamente o padrão **Multiton** — há uma instância de `StudentProfile` por chave (`"Calouro"`, `"Veterano"`, etc.), não apenas uma instância global.
+> **Nota:** Embora registrado como Singleton via Autoload, o `StudentProfileRegistry` implementa internamente o padrão **Multiton** - há uma instância de `StudentProfile` por chave (`"Calouro"`, `"Veterano"`, etc.), não apenas uma instância global.
 
 ---
 
@@ -183,16 +176,16 @@ var _cache: Dictionary = {}
 
 Verificação realizada em todos os scripts que referenciam autoloads:
 
-| Script | Autoload usado | Acessa propriedades internas (`_`)? | Status |
+| Script | Autoload usado | Acessa propriedades internas? | Status |
 |--------|---------------|-------------------------------------|--------|
-| `main_menu.gd` | GameManager | Não | ✅ OK |
-| `pause_menu.gd` | GameManager, SignalBus | Não | ✅ OK |
-| `player.gd` | SignalBus | Não | ✅ OK |
-| `enemy_base.gd` | SignalBus | Não | ✅ OK |
-| `consumable_base.gd` | SignalBus | Não | ✅ OK |
-| `door.gd` | SignalBus | Não | ✅ OK |
-| `room_validator.gd` | SignalBus | Não | ✅ OK |
-| `hud.gd` | SignalBus | Não | ✅ OK |
+| `main_menu.gd` | GameManager | Não | OK |
+| `pause_menu.gd` | GameManager, SignalBus | Não | OK |
+| `player.gd` | SignalBus | Não | OK |
+| `enemy_base.gd` | SignalBus | Não | OK |
+| `consumable_base.gd` | SignalBus | Não | OK |
+| `door.gd` | SignalBus | Não | OK |
+| `room_validator.gd` | SignalBus | Não | OK |
+| `hud.gd` | SignalBus | Não | OK |
 
 **Resultado:** Nenhuma violação de encapsulamento encontrada. Todos os scripts utilizam apenas APIs públicas dos autoloads.
 
@@ -200,21 +193,21 @@ Verificação realizada em todos os scripts que referenciam autoloads:
 
 | Singleton | Estado mantido | Necessário? |
 |-----------|---------------|-------------|
-| GameManager | `current_state`, `current_room_index`, `run_score`, `player_level`, `player_xp` | ✅ Sim — estado de run compartilhado |
-| SignalBus | Apenas sinais (sem variáveis de estado) | ✅ Sim — hub de comunicação |
-| AudioManager | Referências aos players de áudio | ✅ Sim — controle de áudio persistente |
-| StudentProfileRegistry | Cache `_cache` | ✅ Sim — evita carregamento repetido do disco |
+| GameManager | `current_state`, `current_room_index`, `run_score`, `player_level`, `player_xp` | Sim - estado de run compartilhado |
+| SignalBus | Apenas sinais (sem variáveis de estado) | Sim - hub de comunicação |
+| AudioManager | Referências aos players de áudio | Sim - controle de áudio persistente |
+| StudentProfileRegistry | Cache `_cache` | Sim - evita carregamento repetido do disco |
 
 ### 4.3 Acoplamento Excessivo
 
-- **GameManager** é usado apenas por `main_menu.gd` e `pause_menu.gd` — acoplamento baixo e justificado.
+- **GameManager** é usado apenas por `main_menu.gd` e `pause_menu.gd` - acoplamento baixo e justificado.
 - **SignalBus** é o ponto de comunicação central, mas isso é intencional (padrão Mediator).
-- **AudioManager** não possui uso direto em scripts GD encontrados — configurado via inspetor (baixíssimo acoplamento).
-- **StudentProfileRegistry** é usado apenas na seleção de perfil — acoplamento mínimo.
+- **AudioManager** não possui uso direto em scripts GD encontrados - configurado via inspetor (baixíssimo acoplamento).
+- **StudentProfileRegistry** é usado apenas na seleção de perfil - acoplamento mínimo.
 
 ---
 
-## 5. Análise do GameManager — Divisão de Responsabilidades
+## 5. Análise do GameManager - Divisão de Responsabilidades
 
 O `GameManager` atualmente concentra dois grupos de responsabilidades:
 
@@ -239,12 +232,18 @@ GameManager (Singleton)          PlayerProgressManager (Singleton)
 └── add_score(amount)
 ```
 
-**Decisão atual:** O `GameManager` ainda não configura um God Object — a divisão é opcional e deve ser implementada quando o número de responsabilidades tornar o script difícil de manter.
+**Decisão atual:** O `GameManager` ainda não configura um God Object - a divisão é opcional e deve ser implementada quando o número de responsabilidades tornar o script difícil de manter.
 
 ---
 
 ## 6. Referências
 
-- [Godot Docs — Singletons / Autoload](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html)
-- [Refactoring Guru — Singleton](https://refactoring.guru/design-patterns/singleton)
-- [GOF — Design Patterns: Elements of Reusable Object-Oriented Software](https://www.amazon.com.br/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612)
+- [Godot Docs - Singletons / Autoload](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html)
+- [Refactoring Guru - Singleton](https://refactoring.guru/design-patterns/singleton)
+- [GOF - Design Patterns: Elements of Reusable Object-Oriented Software](https://www.amazon.com.br/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612)
+
+## Versionamento
+
+| Versão | Data       | Descrição                        | Autor(es)                         |
+|--------|------------|----------------------------------|-----------------------------------|
+| 1.0    | 18/05/2026 | Criação da documentação          | Philipe Morais   |
