@@ -22,7 +22,7 @@ var player_xp: int = 0
 func start_run() -> void:
 	reset_run()
 	current_state = GameState.PLAYING
-	SignalBus.run_started.emit()
+	GameMediator.notify(self, GameMediator.EVENT_RUN_STARTED)
 
 
 ## Reseta TODO o estado volátil da run (Permadeath).
@@ -36,16 +36,16 @@ func reset_run() -> void:
 
 func end_run(victory: bool) -> void:
 	current_state = GameState.VICTORY if victory else GameState.GAME_OVER
-	SignalBus.run_ended.emit(victory)
+	GameMediator.notify(self, GameMediator.EVENT_RUN_ENDED, {"victory": victory})
 
 
 func toggle_pause() -> void:
 	var is_paused: bool = current_state != GameState.PAUSED
 	current_state = GameState.PAUSED if is_paused else GameState.PLAYING
 	get_tree().paused = is_paused
-	SignalBus.game_paused.emit(is_paused)
+	GameMediator.notify(self, GameMediator.EVENT_GAME_PAUSED, {"is_paused": is_paused})
 
 
 func add_score(amount: int) -> void:
 	run_score += amount
-	SignalBus.score_changed.emit(run_score)
+	GameMediator.notify(self, GameMediator.EVENT_SCORE_CHANGED, {"new_score": run_score})

@@ -39,7 +39,7 @@ func _die() -> void:
 	if _is_dead:
 		return
 	_is_dead = true
-	SignalBus.enemy_died.emit(self)
+	GameMediator.notify(self, GameMediator.EVENT_ENEMY_DIED, {"enemy": self})
 	queue_free()
 
 

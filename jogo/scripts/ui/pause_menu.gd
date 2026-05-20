@@ -3,7 +3,6 @@ extends Control
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	SignalBus.game_paused.connect(_on_game_paused)
 
 
 func _unhandled_input(event: InputEvent) -> void:
