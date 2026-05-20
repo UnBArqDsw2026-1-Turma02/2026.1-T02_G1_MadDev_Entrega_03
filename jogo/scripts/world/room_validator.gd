@@ -1,7 +1,7 @@
 ## Visitor Pattern — visita cada inimigo ativo e cada porta da sala para determinar
 ## se o estado da sala mudou (todos mortos → destrava portas).
 ## Coloque um nó com este script em cada sala de combate.
-## Conecte SignalBus.enemy_died → _on_enemy_died() via inspetor.
+## Registra handlers no GameMediator via código (nó instanciado em runtime).
 extends Node
 
 # IDs das portas que este validador controla (preencha via inspetor).
@@ -47,7 +47,7 @@ func visit_door(door: Node) -> void:
 
 
 # ---------------------------------------------------------------------------
-# Receptor do sinal SignalBus.enemy_died — conectar via inspetor
+# Receptor do GameMediator.EVENT_ENEMY_DIED
 # ---------------------------------------------------------------------------
 func _on_mediator_enemy_died(sender: Object, _event: StringName, data: Dictionary) -> void:
 	var enemy: Node = data.get("enemy", sender) as Node

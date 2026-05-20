@@ -1,6 +1,5 @@
 ## Command/Adapter Pattern — leitura de input separada da execução de movimento.
-## Observer Pattern  — sinais health_changed e died notificam a UI sem acoplamento direto.
-## Conexões de sinais devem ser feitas via inspetor.
+## Observer Pattern  — eventos publicados via GameMediator notificam sistemas interessados.
 extends CharacterBody2D
 
 # ---------------------------------------------------------------------------
