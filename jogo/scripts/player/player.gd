@@ -1,13 +1,6 @@
 ## Command/Adapter Pattern — leitura de input separada da execução de movimento.
-## Observer Pattern  — sinais health_changed e died notificam a UI sem acoplamento direto.
-## Conexões de sinais devem ser feitas via inspetor.
+## Observer Pattern  — eventos publicados via GameMediator notificam sistemas interessados.
 extends CharacterBody2D
-
-# ---------------------------------------------------------------------------
-# Sinais (Observer)
-# ---------------------------------------------------------------------------
-signal health_changed(new_health: int, max_health: int)
-signal died()
 
 # ---------------------------------------------------------------------------
 # Atributos de movimento
@@ -102,21 +95,24 @@ func _execute_dash() -> void:
 func take_damage(amount: int) -> void:
 	var damage: int = maxi(0, amount - defense)
 	current_health = maxi(0, current_health - damage)
-	health_changed.emit(current_health, max_health)
-	SignalBus.player_health_changed.emit(current_health, max_health)
+	GameMediator.notify(self, GameMediator.EVENT_PLAYER_HEALTH_CHANGED, {
+		"new_health": current_health,
+		"max_health": max_health,
+	})
 	if current_health == 0:
 		_die()
 
 
 func heal(amount: int) -> void:
 	current_health = mini(max_health, current_health + amount)
-	health_changed.emit(current_health, max_health)
-	SignalBus.player_health_changed.emit(current_health, max_health)
+	GameMediator.notify(self, GameMediator.EVENT_PLAYER_HEALTH_CHANGED, {
+		"new_health": current_health,
+		"max_health": max_health,
+	})
 
 
 func _die() -> void:
-	died.emit()
-	SignalBus.player_died.emit()
+	GameMediator.notify(self, GameMediator.EVENT_PLAYER_DIED)
 
 
 # ---------------------------------------------------------------------------

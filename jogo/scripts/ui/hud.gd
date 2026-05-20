@@ -19,7 +19,7 @@ func _ready() -> void:
 
 
 # ---------------------------------------------------------------------------
-# Observer — receptores de eventos (conectar via inspetor no SignalBus)
+# Observer — conectar SignalBus.player_health_changed via inspetor
 # ---------------------------------------------------------------------------
 func on_player_health_changed(new_health: int, max_health: int) -> void:
 	if health_label == null:
