@@ -8,6 +8,7 @@ extends CharacterBody2D
 # Atributos base
 # ---------------------------------------------------------------------------
 @export var max_health: int = 30
+@export var defense: int = 0
 @export var resistance: int = 0
 @export var attack_damage: int = 5
 @export var move_speed: float = 60.0
@@ -21,24 +22,19 @@ var _is_dead: bool = false
 # ---------------------------------------------------------------------------
 func _ready() -> void:
 	current_health = max_health
-	_build_damage_chain()
 
 
 # ---------------------------------------------------------------------------
 # Combate — ponto de entrada para Chain of Responsibility
 # ---------------------------------------------------------------------------
-var damage_chain: DamageHandler
-
-func _build_damage_chain() -> void:
-	var armor_handler = ArmorHandler.new()
-	var health_end = HealthHandler.new()
-	
-	armor_handler.armor_value = resistance
-	armor_handler.next = health_end
-	damage_chain = armor_handler
+@export var damage_chain: DamageHandler
 
 func take_damage(amount: int) -> void:
 	if _is_dead:
+		return
+	
+	if not damage_chain:
+		apply_final_damage(amount)
 		return
 	
 	var context = {"target": self}

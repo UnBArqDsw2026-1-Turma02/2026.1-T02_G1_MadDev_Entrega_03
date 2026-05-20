@@ -23,6 +23,7 @@ signal died()
 @export var max_health: int = 100
 @export var base_damage: int = 10
 @export var defense: int = 0
+@export var resistance: int = 0
 
 var current_health: int = max_health
 
@@ -53,7 +54,6 @@ var _can_dash: bool = true
 # ---------------------------------------------------------------------------
 func _ready() -> void:
 	current_health = max_health
-	_build_damage_chain()
 
 
 func _physics_process(_delta: float) -> void:
@@ -98,22 +98,20 @@ func _execute_dash() -> void:
 # ---------------------------------------------------------------------------
 # Vida (Observer via sinais)
 # ---------------------------------------------------------------------------
-var damage_chain: DamageHandler
-
-func _build_damage_chain() -> void:
-	var armor = ArmorHandler.new()
-	var health_end = HealthHandler.new()
-	armor.armor_value = defense
-	armor.next = health_end
-	damage_chain = armor
+@export var damage_chain: DamageHandler
 
 # Sua função atualizada para usar a cadeia
 func take_damage(amount: int) -> void:
+	if not damage_chain:
+		apply_final_damage(amount)
+		return
+		
 	var context = {"target": self}
 	damage_chain.handle(amount, context)
 
 func apply_final_damage(final_damage: int) -> void:
 	current_health = maxi(0, current_health - final_damage)
+	
 	health_changed.emit(current_health, max_health)
 	SignalBus.player_health_changed.emit(current_health, max_health)
 	
