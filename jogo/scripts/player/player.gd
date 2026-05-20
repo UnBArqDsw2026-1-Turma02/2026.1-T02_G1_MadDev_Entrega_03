@@ -4,12 +4,6 @@
 extends CharacterBody2D
 
 # ---------------------------------------------------------------------------
-# Sinais (Observer)
-# ---------------------------------------------------------------------------
-signal health_changed(new_health: int, max_health: int)
-signal died()
-
-# ---------------------------------------------------------------------------
 # Atributos de movimento
 # ---------------------------------------------------------------------------
 @export var move_speed: float = 200.0
@@ -100,7 +94,6 @@ func _execute_dash() -> void:
 func take_damage(amount: int) -> void:
 	var damage: int = maxi(0, amount - defense)
 	current_health = maxi(0, current_health - damage)
-	health_changed.emit(current_health, max_health)
 	GameMediator.notify(self, GameMediator.EVENT_PLAYER_HEALTH_CHANGED, {
 		"new_health": current_health,
 		"max_health": max_health,
@@ -111,7 +104,6 @@ func take_damage(amount: int) -> void:
 
 func heal(amount: int) -> void:
 	current_health = mini(max_health, current_health + amount)
-	health_changed.emit(current_health, max_health)
 	GameMediator.notify(self, GameMediator.EVENT_PLAYER_HEALTH_CHANGED, {
 		"new_health": current_health,
 		"max_health": max_health,
@@ -119,7 +111,6 @@ func heal(amount: int) -> void:
 
 
 func _die() -> void:
-	died.emit()
 	GameMediator.notify(self, GameMediator.EVENT_PLAYER_DIED)
 
 

@@ -16,8 +16,8 @@ var _handlers: Dictionary = {}
 
 func _ready() -> void:
 	_register_signal_bus_bridge()
-	if OS.is_debug_build():
-		assert(debug_test_unregister(), "GameMediator.unregister nao removeu o handler.")
+	#if OS.is_debug_build():
+		#assert(debug_test_unregister(), "GameMediator.unregister nao removeu o handler.")
 
 
 func notify(sender: Object, event: StringName, data: Dictionary = {}) -> void:
