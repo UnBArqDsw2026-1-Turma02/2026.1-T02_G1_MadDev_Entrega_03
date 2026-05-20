@@ -51,6 +51,7 @@ func _exit_tree() -> void:
 |---|---|
 | `EVENT_PLAYER_HEALTH_CHANGED` | `new_health: int`, `max_health: int` |
 | `EVENT_PLAYER_DIED` | — |
+| `EVENT_ENEMY_SPAWNED` | `enemy: Node` |
 | `EVENT_ENEMY_DIED` | `enemy: Node` |
 | `EVENT_ROOM_CLEARED` | — |
 | `EVENT_RUN_STARTED` | — |

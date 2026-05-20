@@ -4,6 +4,7 @@ extends Node
 
 const EVENT_PLAYER_HEALTH_CHANGED: StringName = &"player_health_changed"
 const EVENT_PLAYER_DIED: StringName = &"player_died"
+const EVENT_ENEMY_SPAWNED: StringName = &"enemy_spawned"
 const EVENT_ENEMY_DIED: StringName = &"enemy_died"
 const EVENT_ROOM_CLEARED: StringName = &"room_cleared"
 const EVENT_RUN_STARTED: StringName = &"run_started"

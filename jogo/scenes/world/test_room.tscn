@@ -6,7 +6,8 @@
 [ext_resource type="Script" uid="uid://broomvalid001" path="res://scripts/world/room_validator.gd" id="4_ytumw"]
 [ext_resource type="PackedScene" uid="uid://cv0xhs4eb6465" path="res://scenes/world/door.tscn" id="5_fc6vu"]
 [ext_resource type="PackedScene" uid="uid://bpausemenu001" path="res://scenes/ui/pause_menu.tscn" id="6_pause"]
-[ext_resource type="PackedScene" uid="uid://djf6b503y8c2n" path="res://scenes/enemies/enemy.tscn" id="7_u3u0o"]
+[ext_resource type="Script" uid="uid://dsawei2qls5mw" path="res://scripts/enemies/basic_enemy_spawner.gd" id="7_6s7be"]
+[ext_resource type="Script" uid="uid://c7lt8ue0cwaui" path="res://scripts/enemies/ranged_enemy_spawner.gd" id="7_u3u0o"]
 
 [node name="TestRoom" type="Node2D" unique_id=2062937570]
 
@@ -23,7 +24,6 @@ position = Vector2(152, 112)
 
 [node name="RoomValidator" type="Node" parent="." unique_id=356141330]
 script = ExtResource("4_ytumw")
-managed_door_ids = Array[String](["", "", "", ""])
 
 [node name="Door" parent="." unique_id=2127026036 instance=ExtResource("5_fc6vu")]
 position = Vector2(-44, -106)
@@ -33,5 +33,10 @@ layer = 10
 
 [node name="PauseMenu" parent="PauseLayer" unique_id=881234567 instance=ExtResource("6_pause")]
 
-[node name="Enemy" parent="." unique_id=1129722874 instance=ExtResource("7_u3u0o")]
-position = Vector2(9, 33)
+[node name="spawn2" type="Node2D" parent="." unique_id=1154256912]
+position = Vector2(58, 73)
+script = ExtResource("7_6s7be")
+
+[node name="spawn" type="Node2D" parent="." unique_id=1541222538]
+position = Vector2(417, 216)
+script = ExtResource("7_u3u0o")
