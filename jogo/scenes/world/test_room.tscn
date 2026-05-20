@@ -35,5 +35,3 @@ layer = 10
 
 [node name="Enemy" parent="." unique_id=1129722874 instance=ExtResource("7_u3u0o")]
 position = Vector2(9, 33)
-
-[connection signal="health_changed" from="Player" to="HUD/HUDContent" method="on_player_health_changed"]
