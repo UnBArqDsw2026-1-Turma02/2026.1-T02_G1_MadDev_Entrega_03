@@ -1,6 +1,6 @@
 ## Factory/Prototype Pattern — classe base de todos os inimigos.
 ## State Pattern   — subclasses implementarão estados de IA.
-## Observer Pattern — emite sinais pelo SignalBus; conexões via inspetor.
+## Observer Pattern — emite eventos via GameMediator.
 ## Chain of Responsibility — take_damage() será o ponto de entrada da cadeia de dano.
 extends CharacterBody2D
 
