@@ -11,7 +11,6 @@ var _stats: Dictionary = {
 	"score": 0,
 	"player_health": 0,
 	"player_max_health": 0,
-	"last_event": &"",
 }
 
 
@@ -74,36 +73,42 @@ func _create_achievements() -> void:
 			&"first_blood",
 			"Primeiro Sangue",
 			"Derrote o primeiro inimigo.",
+			&"enemy_died",
 			Callable(self, "_has_defeated_first_enemy")
 		),
 		Achievement.new().setup(
 			&"enemy_hunter",
 			"Cacador de Bugs",
 			"Derrote 5 inimigos em uma run.",
+			&"enemy_died",
 			Callable(self, "_has_defeated_five_enemies")
 		),
 		Achievement.new().setup(
 			&"collector",
 			"Colecionador",
 			"Colete 3 itens em uma run.",
+			&"item_picked_up",
 			Callable(self, "_has_collected_three_items")
 		),
 		Achievement.new().setup(
 			&"first_room",
 			"Sala Dominada",
 			"Complete a primeira sala.",
+			&"room_cleared",
 			Callable(self, "_has_cleared_first_room")
 		),
 		Achievement.new().setup(
 			&"survivor",
 			"Sobrevivente",
 			"Complete uma sala ainda com vida.",
+			&"room_cleared",
 			Callable(self, "_has_cleared_room_alive")
 		),
 		Achievement.new().setup(
 			&"high_score",
 			"Nota Maxima",
 			"Alcance 100 pontos em uma run.",
+			&"score_changed",
 			Callable(self, "_has_reached_high_score")
 		),
 	]
@@ -117,13 +122,12 @@ func _reset_stats() -> void:
 		"score": 0,
 		"player_health": 0,
 		"player_max_health": 0,
-		"last_event": &"",
 	}
 
 
-func _evaluate_achievements() -> void:
+func _evaluate_achievements_for_event(event: StringName) -> void:
 	for achievement in achievements:
-		if achievement.can_unlock(_stats):
+		if achievement.event == event and achievement.can_unlock(_stats):
 			achievement.unlocked = true
 			SignalBus.achievement_unlocked.emit(achievement)
 
@@ -134,33 +138,27 @@ func _on_run_started() -> void:
 
 func _on_enemy_died(_enemy: Node) -> void:
 	_stats["enemies_defeated"] += 1
-	_stats["last_event"] = &"enemy_died"
-	_evaluate_achievements()
+	_evaluate_achievements_for_event(&"enemy_died")
 
 
 func _on_item_picked_up(_item_data: Dictionary) -> void:
 	_stats["items_collected"] += 1
-	_stats["last_event"] = &"item_picked_up"
-	_evaluate_achievements()
+	_evaluate_achievements_for_event(&"item_picked_up")
 
 
 func _on_room_cleared() -> void:
 	_stats["rooms_cleared"] += 1
-	_stats["last_event"] = &"room_cleared"
-	_evaluate_achievements()
+	_evaluate_achievements_for_event(&"room_cleared")
 
 
 func _on_player_health_changed(new_health: int, max_health: int) -> void:
 	_stats["player_health"] = new_health
 	_stats["player_max_health"] = max_health
-	_stats["last_event"] = &"player_health_changed"
-	_evaluate_achievements()
 
 
 func _on_score_changed(new_score: int) -> void:
 	_stats["score"] = new_score
-	_stats["last_event"] = &"score_changed"
-	_evaluate_achievements()
+	_evaluate_achievements_for_event(&"score_changed")
 
 
 func _has_defeated_first_enemy(data: Dictionary) -> bool:
@@ -180,7 +178,7 @@ func _has_cleared_first_room(data: Dictionary) -> bool:
 
 
 func _has_cleared_room_alive(data: Dictionary) -> bool:
-	return data["last_event"] == &"room_cleared" and data["rooms_cleared"] >= 1 and data["player_health"] > 0
+	return data["rooms_cleared"] >= 1 and data["player_health"] > 0
 
 
 func _has_reached_high_score(data: Dictionary) -> bool:
