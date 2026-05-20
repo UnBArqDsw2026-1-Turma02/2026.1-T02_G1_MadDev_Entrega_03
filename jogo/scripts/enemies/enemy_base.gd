@@ -21,16 +21,32 @@ var _is_dead: bool = false
 # ---------------------------------------------------------------------------
 func _ready() -> void:
 	current_health = max_health
+	_build_damage_chain()
 
 
 # ---------------------------------------------------------------------------
 # Combate — ponto de entrada para Chain of Responsibility
 # ---------------------------------------------------------------------------
+var damage_chain: DamageHandler
+
+func _build_damage_chain() -> void:
+	var armor_handler = ArmorHandler.new()
+	var health_end = HealthHandler.new()
+	
+	armor_handler.armor_value = resistance
+	armor_handler.next = health_end
+	damage_chain = armor_handler
+
 func take_damage(amount: int) -> void:
 	if _is_dead:
 		return
-	var damage: int = maxi(0, amount - resistance)
-	current_health = maxi(0, current_health - damage)
+	
+	var context = {"target": self}
+	damage_chain.handle(amount, context)
+
+func apply_final_damage(final_damage: int) -> void:
+	current_health = maxi(0, current_health - final_damage)
+	
 	if current_health == 0:
 		_die()
 
