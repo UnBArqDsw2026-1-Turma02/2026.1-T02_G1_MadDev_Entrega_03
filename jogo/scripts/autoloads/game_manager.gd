@@ -57,30 +57,25 @@ func add_score(amount: int) -> void:
 
 
 func load_room(room_type: String, difficulty: int = 1) -> void:
-	# Remove a sala atual se existir
 	if current_room != null:
 		current_room.queue_free()
-	
-	# Cria um novo builder
-	var builder = RoomBuilder.new()
-	
-	# Usa o director para criar o tipo de sala solicitado
+
+	var director := RoomDirector.new()
+	director.set_builder(RoomBuilder.new())
+
 	match room_type:
 		"combat":
-			current_room = RoomDirector.build_combat_room(builder, difficulty)
+			current_room = director.build_combat_room(difficulty)
 		"rest":
-			current_room = RoomDirector.build_rest_room(builder)
+			current_room = director.build_rest_room()
 		"boss":
-			current_room = RoomDirector.build_boss_room(builder)
+			current_room = director.build_boss_room()
 		_:
-			current_room = RoomDirector.build_empty_room(builder)
-	
-	# Adiciona a sala à cena principal
+			current_room = director.build_empty_room()
+
 	if current_room:
-		# Precisa de um nó principal na cena para adicionar a sala
-		var main_scene = get_tree().current_scene
+		var main_scene := get_tree().current_scene
 		if main_scene:
 			main_scene.add_child(current_room)
 		else:
-			# Se não tem cena principal, adiciona como filho do GameManager
 			add_child(current_room)
