@@ -8,8 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bpausemenu001" path="res://scenes/ui/pause_menu.tscn" id="6_pause"]
 [ext_resource type="Script" uid="uid://dsawei2qls5mw" path="res://scripts/enemies/basic_enemy_spawner.gd" id="7_6s7be"]
 [ext_resource type="Script" uid="uid://c7lt8ue0cwaui" path="res://scripts/enemies/ranged_enemy_spawner.gd" id="7_u3u0o"]
-[ext_resource type="Script" uid="uid://cyeaw60efjvl4" path="res://scripts/world/projectile_pool.gd" id="8_vnu35"]
-[ext_resource type="Script" uid="uid://lr14jljvcf4l" path="res://scenes/test_pool.gd" id="9_wb54u"]
+[ext_resource type="Script" uid="uid://bdpmnpb2mo3c2" path="res://scripts/world/projectile_pool.gd" id="8_vnu35"]
 
 [node name="TestRoom" type="Node2D" unique_id=2062937570]
 
@@ -41,10 +40,6 @@ script = ExtResource("7_6s7be")
 
 [node name="ProjectilePool" type="Node" parent="." unique_id=135487366]
 script = ExtResource("8_vnu35")
-
-[node name="TestPool" type="Node" parent="." unique_id=1154113550 node_paths=PackedStringArray("pool")]
-script = ExtResource("9_wb54u")
-pool = NodePath("../ProjectilePool")
 
 [node name="spawn" type="Node2D" parent="." unique_id=1541222538]
 position = Vector2(417, 216)

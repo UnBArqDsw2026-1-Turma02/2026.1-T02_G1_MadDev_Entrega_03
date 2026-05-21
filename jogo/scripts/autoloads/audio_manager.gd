@@ -38,6 +38,22 @@ func play_sfx(stream: AudioStream) -> void:
 	sfx_player.play()
 
 
+func play_sfx_by_name(sfx_name: String) -> void:
+	var stream := load("res://art/sounds/" + sfx_name + ".wav") as AudioStream
+	if stream:
+		play_sfx(stream)
+	else:
+		push_warning("AudioManager: som não encontrado - ", sfx_name)
+
+
+func play_music_by_name(music_name: String) -> void:
+	var stream := load("res://art/music/" + music_name + ".wav") as AudioStream
+	if stream:
+		play_music(stream)
+	else:
+		push_warning("AudioManager: música não encontrada - ", music_name)
+
+
 # ---------------------------------------------------------------------------
 # Utilitário interno
 # ---------------------------------------------------------------------------
