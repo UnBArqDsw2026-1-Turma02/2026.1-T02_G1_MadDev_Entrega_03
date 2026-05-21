@@ -1,5 +1,4 @@
 ## Singleton Pattern — instância global única que guarda o estado da run.
-## Facade Pattern — reset_run() esconde a complexidade de reiniciar todos os sistemas.
 ## Conexões de sinais devem ser feitas via inspetor, não via código.
 extends Node
 
