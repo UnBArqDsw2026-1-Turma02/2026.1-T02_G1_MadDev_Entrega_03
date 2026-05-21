@@ -17,8 +17,6 @@ var _handlers: Dictionary = {}
 
 func _ready() -> void:
 	_register_signal_bus_bridge()
-	#if OS.is_debug_build():
-		#assert(debug_test_unregister(), "GameMediator.unregister nao removeu o handler.")
 
 
 func notify(sender: Object, event: StringName, data: Dictionary = {}) -> void:
@@ -52,18 +50,6 @@ func unregister(event: StringName, callback: Callable) -> void:
 	callbacks.erase(callback)
 	if callbacks.is_empty():
 		_handlers.erase(event)
-
-
-func debug_test_unregister() -> bool:
-	var received_count: int = 0
-	var callback := func(_sender: Object, _event: StringName, _data: Dictionary) -> void:
-		received_count += 1
-
-	register(&"debug_unregister_test", callback)
-	notify(self, &"debug_unregister_test")
-	unregister(&"debug_unregister_test", callback)
-	notify(self, &"debug_unregister_test")
-	return received_count == 1
 
 
 func _register_signal_bus_bridge() -> void:

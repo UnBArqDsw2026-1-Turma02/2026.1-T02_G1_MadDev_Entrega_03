@@ -1,5 +1,6 @@
 ## Command/Adapter Pattern — leitura de input separada da execução de movimento.
 ## Observer Pattern  — eventos publicados via GameMediator notificam sistemas interessados.
+## Object Pool      — disparo de projéteis via ProjectilePool (sem instantiate/queue_free).
 extends CharacterBody2D
 
 # ---------------------------------------------------------------------------
@@ -18,6 +19,14 @@ extends CharacterBody2D
 @export var defense: int = 0
 
 var current_health: int = max_health
+
+# ---------------------------------------------------------------------------
+# Object Pool — pool de projéteis do player
+# ---------------------------------------------------------------------------
+@export var projectile_pool: ProjectilePool
+@export var shoot_cooldown: float = 0.3
+
+var _shoot_timer: float = 0.0
 
 # ---------------------------------------------------------------------------
 # Slots de equipamento (Decorator / Iterator)
@@ -45,11 +54,12 @@ var _can_dash: bool = true
 # Lifecycle
 # ---------------------------------------------------------------------------
 func _ready() -> void:
+	add_to_group("player")
 	current_health = max_health
 	SignalBus.player_health_changed.emit(current_health, max_health)
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if _is_dashing:
 		move_and_slide()
 		return
@@ -59,6 +69,12 @@ func _physics_process(_delta: float) -> void:
 
 	if _read_dash_input() and _can_dash:
 		_execute_dash()
+
+	if _shoot_timer > 0.0:
+		_shoot_timer -= delta
+
+	if _read_shoot_input() and _shoot_timer <= 0.0:
+		_shoot()
 
 	move_and_slide()
 
@@ -74,6 +90,10 @@ func _read_dash_input() -> bool:
 	return Input.is_action_just_pressed("dash")
 
 
+func _read_shoot_input() -> bool:
+	return Input.is_action_pressed("shoot")
+
+
 # ---------------------------------------------------------------------------
 # Command — execução do dash isolada da leitura de input
 # ---------------------------------------------------------------------------
@@ -86,6 +106,17 @@ func _execute_dash() -> void:
 	_is_dashing = false
 	await get_tree().create_timer(dash_cooldown).timeout
 	_can_dash = true
+
+
+# ---------------------------------------------------------------------------
+# Object Pool — disparo via pool de projéteis na direção do mouse
+# ---------------------------------------------------------------------------
+func _shoot() -> void:
+	if projectile_pool == null:
+		return
+	var dir: Vector2 = (get_global_mouse_position() - global_position).normalized()
+	projectile_pool.get_projectile(global_position, dir, self)
+	_shoot_timer = shoot_cooldown
 
 
 # ---------------------------------------------------------------------------
