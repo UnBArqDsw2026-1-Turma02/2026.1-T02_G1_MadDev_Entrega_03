@@ -15,6 +15,11 @@ var run_score: int = 0
 var player_level: int = 1
 var player_xp: int = 0
 
+# ---------------------------------------------------------------------------
+# Geração de salas usando Builder (Issue 2)
+# ---------------------------------------------------------------------------
+var current_room: Node2D = null
+
 
 # ---------------------------------------------------------------------------
 # Facade — ponto único para iniciar/encerrar uma run
@@ -49,3 +54,28 @@ func toggle_pause() -> void:
 func add_score(amount: int) -> void:
 	run_score += amount
 	GameMediator.notify(self, GameMediator.EVENT_SCORE_CHANGED, {"new_score": run_score})
+
+
+func load_room(room_type: String, difficulty: int = 1) -> void:
+	if current_room != null:
+		current_room.queue_free()
+
+	var director := RoomDirector.new()
+	director.set_builder(RoomBuilder.new())
+
+	match room_type:
+		"combat":
+			current_room = director.build_combat_room(difficulty)
+		"rest":
+			current_room = director.build_rest_room()
+		"boss":
+			current_room = director.build_boss_room()
+		_:
+			current_room = director.build_empty_room()
+
+	if current_room:
+		var main_scene := get_tree().current_scene
+		if main_scene:
+			main_scene.add_child(current_room)
+		else:
+			add_child(current_room)
