@@ -28,3 +28,8 @@ text = "HP: -- / --"
 
 [node name="ConsumableRow" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+
+[node name="AchievementLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+visible = false
+text = ""
