@@ -18,3 +18,7 @@ Repositorio dedicado apenas ao projeto do jogo em Godot.
 1. Abra o Godot.
 2. Clique em "Import" e selecione o arquivo `jogo/project.godot`.
 3. Pressione Play para rodar a cena principal.
+
+## Documentacao
+
+- [GOF Comportamental - Mediator](docs/patterns/mediator.md)
