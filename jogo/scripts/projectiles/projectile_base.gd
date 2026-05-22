@@ -72,6 +72,11 @@ func _process(delta: float) -> void:
 func apply_damage_to(target: Node) -> void:
 	if target == _shooter:
 		return
+	var shooter_is_enemy: bool = _shooter != null and _shooter.is_in_group("enemy")
+	if shooter_is_enemy and not target.is_in_group("player"):
+		return
+	if not shooter_is_enemy and not target.is_in_group("enemy"):
+		return
 	if target.has_method("take_damage"):
 		target.take_damage(damage)
 	# Não chamar disable() diretamente aqui: sinais de colisão rodam durante o
