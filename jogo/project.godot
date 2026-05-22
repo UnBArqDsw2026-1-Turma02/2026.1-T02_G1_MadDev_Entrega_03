@@ -21,7 +21,7 @@ SignalBus="*res://scripts/autoloads/signal_bus.gd"
 GameMediator="*res://scripts/autoloads/game_mediator.gd"
 GameManager="*res://scripts/autoloads/game_manager.gd"
 AudioManager="*res://scenes/autoloads/audio_manager.tscn"
-StudentProfileRegistry="*res://scripts/resources/student_profile_registry.gd"
+StudentProfileRegistry="*uid://bsprofreg0001"
 GameFacade="*res://scripts/autoloads/game_facade.gd"
 AchievementManager="*res://scripts/autoloads/achievement_manager.gd"
 
