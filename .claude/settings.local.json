@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git ls-tree *)",
+      "Bash(grep -i \"hud.gd$\")",
+      "Bash(where.exe docsify *)",
+      "Bash(docsify --version)",
+      "Bash(docsify serve *)",
+      "Bash(curl -s -o nul -w \"%{http_code}\" http://localhost:3333/)",
+      "Bash(curl -s \"http://localhost:3333/patterns/singleton.md\")",
+      "Bash(node *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3335/)",
+      "Bash(curl -s http://localhost:3335/pattern/multiton.md)"
+    ]
+  }
+}
