@@ -1,0 +1,16 @@
+# Godot 4.x
+.godot/
+
+# Mono/C# (if used)
+.mono/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Optional build artifacts
+*.tmp
+*.bak
+*.log
