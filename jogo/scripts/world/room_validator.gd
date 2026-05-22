@@ -12,17 +12,12 @@ var _enemies_killed: int = 0
 
 
 func _ready() -> void:
+	GameMediator.register(GameMediator.EVENT_ENEMY_SPAWNED, _on_mediator_enemy_spawned)
 	GameMediator.register(GameMediator.EVENT_ENEMY_DIED, _on_mediator_enemy_died)
-	var enemies: Array[Node] = get_tree().get_nodes_in_group("enemies")
-	_total_enemies = enemies.size()
-	_enemies_killed = 0
-
-	# Visita cada inimigo para registrar estado inicial.
-	for enemy in enemies:
-		visit_enemy(enemy)
 
 
 func _exit_tree() -> void:
+	GameMediator.unregister(GameMediator.EVENT_ENEMY_SPAWNED, _on_mediator_enemy_spawned)
 	GameMediator.unregister(GameMediator.EVENT_ENEMY_DIED, _on_mediator_enemy_died)
 
 
@@ -47,8 +42,15 @@ func visit_door(door: Node) -> void:
 
 
 # ---------------------------------------------------------------------------
-# Receptor do GameMediator.EVENT_ENEMY_DIED
+# Receptores do GameMediator
 # ---------------------------------------------------------------------------
+func _on_mediator_enemy_spawned(_sender: Object, _event: StringName, data: Dictionary) -> void:
+	var enemy: Node = data.get("enemy") as Node
+	if enemy != null:
+		_total_enemies += 1
+		visit_enemy(enemy)
+
+
 func _on_mediator_enemy_died(sender: Object, _event: StringName, data: Dictionary) -> void:
 	var enemy: Node = data.get("enemy", sender) as Node
 	if enemy != null:

@@ -28,16 +28,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	match event.keycode:
 		KEY_K:
 			SignalBus.enemy_died.emit(self)
-			print("Debug Achievement: inimigo derrotado")
 		KEY_I:
 			SignalBus.item_picked_up.emit({"name": "Debug Item"})
-			print("Debug Achievement: item coletado")
 		KEY_R:
 			SignalBus.room_cleared.emit()
-			print("Debug Achievement: sala concluida")
 		KEY_P:
 			GameManager.add_score(100)
-			print("Debug Achievement: 100 pontos adicionados")
 
 
 func get_all_achievements() -> Array[Achievement]:
