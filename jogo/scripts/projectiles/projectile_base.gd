@@ -67,3 +67,20 @@ func apply_damage_to(target: Node) -> void:
 	if target.has_method("take_damage"):
 		target.take_damage(damage)
 	disable()  
+	
+## ─────────────────────────────────────────────────────────────────────────────
+## SNIPPET — Visitor Pattern (#10)
+##
+## Adicione o bloco abaixo ao final do seu projectile_base.gd existente.
+## NÃO substitua o arquivo inteiro — apenas copie e cole este bloco.
+## ─────────────────────────────────────────────────────────────────────────────
+ 
+# ---------------------------------------------------------------------------
+# Visitor Pattern (#10) — Double Dispatch
+# ---------------------------------------------------------------------------
+## Permite que um StatsVisitor colete dados deste projétil sem que ProjectileBase
+## precise conhecer o visitor.
+## Adicione também o nó ao grupo "projectiles" no inspetor do Godot para que
+## o RoomStatsReport o encontre via get_tree().get_nodes_in_group("projectiles").
+func accept(visitor: Object) -> void:
+	visitor.visit_projectile(self)

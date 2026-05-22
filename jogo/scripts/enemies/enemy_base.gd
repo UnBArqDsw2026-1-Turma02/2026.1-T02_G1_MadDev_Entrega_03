@@ -122,5 +122,5 @@ func _die() -> void:
 ## Permite que um StatsVisitor colete dados deste inimigo sem que EnemyBase
 ## precise conhecer o visitor. O visitor recebe a instância concreta (self)
 ## e chama visit_enemy() com acesso a todos os atributos públicos.
-func accept(visitor: StatsVisitor) -> void:
+func accept(visitor: Object) -> void:
 	visitor.visit_enemy(self)
