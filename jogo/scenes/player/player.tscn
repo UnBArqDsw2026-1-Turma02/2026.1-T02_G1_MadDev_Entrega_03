@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://bh6qb37fqp2vc" path="res://icon.svg" id="2_icon"]
 
 [sub_resource type="CapsuleShape2D" id="Shape_player"]
-radius = 6.0
-height = 14.0
+radius = 31.0
+height = 62.0
 
 [node name="Player" type="CharacterBody2D" unique_id=1025323027]
 collision_mask = 2

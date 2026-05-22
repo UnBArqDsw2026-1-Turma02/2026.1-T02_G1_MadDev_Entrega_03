@@ -30,8 +30,6 @@ class_name StudentProfile
 # Utilitários
 # ---------------------------------------------------------------------------
 func apply_to(player: Node) -> void:
-	if player.has_method("take_damage"):
-		pass  # ponto de extensão — chamado pelo GameManager ao iniciar a run
 	if player.get("max_health") != null:
 		player.max_health = roundi(player.max_health * base_hp_modifier)
 		player.current_health = player.max_health
