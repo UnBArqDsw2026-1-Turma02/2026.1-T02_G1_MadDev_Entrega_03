@@ -1,5 +1,6 @@
 ## Command/Adapter Pattern — leitura de input separada da execução de movimento.
 ## Observer Pattern  — eventos publicados via GameMediator notificam sistemas interessados.
+## Object Pool      — disparo de projéteis via ProjectilePool (sem instantiate/queue_free).
 extends CharacterBody2D
 
 # ---------------------------------------------------------------------------
@@ -16,8 +17,17 @@ extends CharacterBody2D
 @export var max_health: int = 100
 @export var base_damage: int = 10
 @export var defense: int = 0
+@export var resistance: float = 0.0
 
 var current_health: int = max_health
+
+# ---------------------------------------------------------------------------
+# Object Pool — pool de projéteis do player
+# ---------------------------------------------------------------------------
+@export var projectile_pool: ProjectilePool
+@export var shoot_cooldown: float = 0.3
+
+var _shoot_timer: float = 0.0
 
 # ---------------------------------------------------------------------------
 # Slots de equipamento (Decorator / Iterator)
@@ -45,11 +55,12 @@ var _can_dash: bool = true
 # Lifecycle
 # ---------------------------------------------------------------------------
 func _ready() -> void:
+	add_to_group("player")
 	current_health = max_health
 	SignalBus.player_health_changed.emit(current_health, max_health)
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if _is_dashing:
 		move_and_slide()
 		return
@@ -59,6 +70,12 @@ func _physics_process(_delta: float) -> void:
 
 	if _read_dash_input() and _can_dash:
 		_execute_dash()
+
+	if _shoot_timer > 0.0:
+		_shoot_timer -= delta
+
+	if _read_shoot_input() and _shoot_timer <= 0.0:
+		_shoot()
 
 	move_and_slide()
 
@@ -72,6 +89,10 @@ func _read_move_input() -> Vector2:
 
 func _read_dash_input() -> bool:
 	return Input.is_action_just_pressed("dash")
+
+
+func _read_shoot_input() -> bool:
+	return Input.is_action_pressed("shoot")
 
 
 # ---------------------------------------------------------------------------
@@ -89,15 +110,38 @@ func _execute_dash() -> void:
 
 
 # ---------------------------------------------------------------------------
+# Object Pool — disparo via pool de projéteis na direção do mouse
+# ---------------------------------------------------------------------------
+func _shoot() -> void:
+	if projectile_pool == null:
+		return
+	var dir: Vector2 = (get_global_mouse_position() - global_position).normalized()
+	projectile_pool.get_projectile(global_position, dir, self)
+	_shoot_timer = shoot_cooldown
+
+
+# ---------------------------------------------------------------------------
 # Vida (Observer via sinais)
 # ---------------------------------------------------------------------------
+@export var damage_chain: DamageHandler
+
+# Sua função atualizada para usar a cadeia
 func take_damage(amount: int) -> void:
-	var damage: int = maxi(0, amount - defense)
-	current_health = maxi(0, current_health - damage)
+	if not damage_chain:
+		apply_final_damage(amount)
+		return
+		
+	var context = {"target": self}
+	damage_chain.handle(amount, context)
+
+func apply_final_damage(final_damage: int) -> void:
+	current_health = maxi(0, current_health - final_damage)
+	
 	GameMediator.notify(self, GameMediator.EVENT_PLAYER_HEALTH_CHANGED, {
 		"new_health": current_health,
 		"max_health": max_health,
 	})
+	
 	if current_health == 0:
 		_die()
 
