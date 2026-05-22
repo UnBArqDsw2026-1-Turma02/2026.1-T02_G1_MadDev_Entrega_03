@@ -49,19 +49,38 @@ func _test_decorator() -> void:
 # Teste do padrão Iterator
 # ---------------------------------------------------------------------------
 func _test_iterator() -> void:
-	# --- FilteredItemIterator ---
-	var inventory := [
-		{"name": "Lápis",   "type": &"weapon"},
-		{"name": "Café",    "type": &"consumable"},
-		{"name": "Caneta",  "type": &"weapon"},
-		{"name": "Boné",    "type": &"armor"},
-		{"name": "Baralho", "type": &"weapon"},
-	]
+	# --- FilteredItemIterator com ItemBase reais ---
+	var sword := ItemBase.new()
+	sword.item_name = "Espada"
+	sword.base_value = 15
+	sword.item_type = &"weapon"
 
-	print("\n-- Filtrar apenas 'weapon' --")
+	var potion := ItemBase.new()
+	potion.item_name = "Poção"
+	potion.base_value = 5
+	potion.item_type = &"consumable"
+
+	var bow := ItemBase.new()
+	bow.item_name = "Arco"
+	bow.base_value = 12
+	bow.item_type = &"weapon"
+
+	var helmet := ItemBase.new()
+	helmet.item_name = "Elmo"
+	helmet.base_value = 8
+	helmet.item_type = &"armor"
+
+	var dagger := ItemBase.new()
+	dagger.item_name = "Adaga"
+	dagger.base_value = 9
+	dagger.item_type = &"weapon"
+
+	var inventory := [sword, potion, bow, helmet, dagger]
+
+	print("\n-- Filtrar apenas 'weapon' (ItemBase) --")
 	var weapon_count := 0
 	for item in FilteredItemIterator.new(inventory, &"weapon"):
-		print("  → ", item.name)
+		print("  → ", item.item_name)
 		weapon_count += 1
 	assert(weapon_count == 3, "Deveria encontrar 3 armas")
 

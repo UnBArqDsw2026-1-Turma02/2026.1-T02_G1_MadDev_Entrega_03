@@ -8,6 +8,7 @@ extends Resource
 # ---------------------------------------------------------------------------
 @export var item_name: String = "Item"
 @export var base_value: int = 10
+@export var item_type: StringName = &""
 
 
 # ---------------------------------------------------------------------------

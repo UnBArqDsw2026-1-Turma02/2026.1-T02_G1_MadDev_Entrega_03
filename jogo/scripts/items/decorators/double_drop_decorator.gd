@@ -4,11 +4,17 @@ class_name DoubleDropDecorator
 extends ItemDecorator
 
 # ---------------------------------------------------------------------------
-# Override — duplica o valor e marca o efeito
+# Atributos do decorador
+# ---------------------------------------------------------------------------
+@export var multiplier: int = 2
+
+
+# ---------------------------------------------------------------------------
+# Override — multiplica o valor e marca o efeito
 # ---------------------------------------------------------------------------
 func get_effect() -> String:
-	return super.get_effect() + " ×2"
+	return super.get_effect() + " ×%d" % multiplier
 
 
 func get_value() -> int:
-	return super.get_value() * 2
+	return super.get_value() * multiplier

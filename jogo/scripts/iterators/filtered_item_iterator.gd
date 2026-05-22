@@ -24,7 +24,7 @@ func _init(p_items: Array, p_filter_type: StringName) -> void:
 # Protocolo de iteração do GDScript
 # ---------------------------------------------------------------------------
 func _iter_init(arg: Array) -> bool:
-	_filtered = items.filter(func(item): return item.type == filter_type)
+	_filtered = items.filter(func(item): return item.get("item_type", &"") == filter_type)
 	arg[0] = 0
 	return _filtered.size() > 0
 
