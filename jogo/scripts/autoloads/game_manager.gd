@@ -4,27 +4,6 @@ extends Node
 
 enum GameState { MENU, PLAYING, PAUSED, GAME_OVER, VICTORY }
 
-func _ready() -> void:
-	_initialize_difficulties()
-
-func _initialize_difficulties() -> void:
-	# Criando e configurando os níveis de balanceamento
-	var easy: DifficultyConfig = DifficultyConfig.new()
-	easy.setup(0.75, 0.85, 1.5)
-	
-	var normal: DifficultyConfig = DifficultyConfig.new()
-	normal.setup(1.0, 1.0, 1.0)
-	
-	var hard: DifficultyConfig = DifficultyConfig.new()
-	hard.setup(1.5, 1.2, 0.7)
-	
-	# Registrando as instâncias no Multiton
-	DifficultyRegistry.register_difficulty(&"easy", easy)
-	DifficultyRegistry.register_difficulty(&"normal", normal)
-	DifficultyRegistry.register_difficulty(&"hard", hard)
-	
-	print("[GameManager] Dificuldades inicializadas com tipagem estática e registradas.")
-
 # ---------------------------------------------------------------------------
 # Estado da run corrente
 # ---------------------------------------------------------------------------
