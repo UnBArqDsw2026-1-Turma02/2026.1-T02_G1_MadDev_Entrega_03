@@ -15,7 +15,21 @@
       "Bash(git branch *)",
       "Bash(git checkout *)",
       "Bash(mv .claude/settings.local.json .claude/settings.local.json.bak)",
-      "Bash(mv .claude/settings.local.json.bak .claude/settings.local.json)"
+      "Bash(mv .claude/settings.local.json.bak .claude/settings.local.json)",
+      "Bash(git mv *)",
+      "Bash(mv docs/PadroesDeProjeto/3.1.1.FactoryMethod.md docs/PadroesDeProjeto/3.1.2.FactoryMethod.md)",
+      "Bash(mv docs/PadroesDeProjeto/3.1.2.Builder.md docs/PadroesDeProjeto/3.1.1.Builder.md)",
+      "Bash(mv docs/PadroesDeProjeto/3.1.3.ObjectPool.md docs/PadroesDeProjeto/3.1.4.ObjectPool.md)",
+      "Bash(mv docs/PadroesDeProjeto/3.2.1.Facade.md docs/PadroesDeProjeto/3.2.2.Facade.md)",
+      "Bash(mv docs/PadroesDeProjeto/3.3.1.TemplateMethod.md docs/PadroesDeProjeto/3.3.3.TemplateMethod.md)",
+      "Bash(gh pr *)",
+      "Bash(where.exe gh *)",
+      "Bash(curl -s \"https://api.github.com/repos/UnBArqDsw2026-1-Turma02/2026.1-T02_G1_MadDev_Entrega_03/pulls?state=all&per_page=50\")",
+      "Bash(mv docs/PadroesDeProjeto/3.2.2.Facade.md docs/PadroesDeProjeto/3.2.3.Facade.md)",
+      "Bash(mv docs/PadroesDeProjeto/3.2.1.Decorator.md docs/PadroesDeProjeto/3.2.2.Decorator.md)",
+      "Bash(mv docs/PadroesDeProjeto/3.3.3.TemplateMethod.md docs/PadroesDeProjeto/3.3.5.TemplateMethod.md)",
+      "Bash(mv docs/PadroesDeProjeto/3.3.2.Mediator.md docs/PadroesDeProjeto/3.3.3.Mediator.md)",
+      "Bash(mv docs/PadroesDeProjeto/3.3.1.Iterator.md docs/PadroesDeProjeto/3.3.2.Iterator.md)"
     ]
   }
 }
