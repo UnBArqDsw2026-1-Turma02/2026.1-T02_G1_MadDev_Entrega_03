@@ -21,6 +21,7 @@ var _is_dead: bool = false
 # Lifecycle
 # ---------------------------------------------------------------------------
 func _ready() -> void:
+	add_to_group("enemy")
 	current_health = max_health
 
 
@@ -55,10 +56,7 @@ func _physics_process(delta: float) -> void:
 	velocity = _get_move_direction() * move_speed
 	move_and_slide()
 	
-	# Ataque (Template Method) - Adicione isso!
 	attack_sequence()
-	
-	# Atualiza cooldown
 	_update_cooldown(delta)
 
 
@@ -78,16 +76,10 @@ var _attack_cooldown_remaining: float = 0.0
 
 ## Template Method - Define a sequência fixa do ataque
 func attack_sequence() -> void:
-	# Se está em cooldown, não ataca
 	if _attack_cooldown_remaining > 0:
-		print("  Em cooldown: ", _attack_cooldown_remaining)  # DEBUG
 		return
-	
-	# Passo 1: Verifica se pode atacar
 	if not can_attack():
-		print("  cannot_attack retornou false")  # DEBUG
 		return
-		
 	prepare_attack()
 	execute_attack()
 	cooldown()
@@ -107,11 +99,9 @@ func prepare_attack() -> void:
 	pass
 
 
-## Executa o ataque (aplica dano ao jogador)
-## Sobrescreva em classes filhas para ataques específicos
+## Executa o ataque — deve ser sobrescrito em cada inimigo concreto
 func execute_attack() -> void:
-	# Padrão: ataque básico
-	_apply_damage_to_player(attack_damage)
+	pass
 
 
 ## Inicia o cooldown do ataque
@@ -121,19 +111,11 @@ func cooldown() -> void:
 
 ## Aplica dano ao jogador (método auxiliar)
 func _apply_damage_to_player(damage_amount: int) -> void:
-	# Encontra o jogador na cena
 	var player = get_tree().get_first_node_in_group("player")
 	if player and player.has_method("take_damage"):
 		player.take_damage(damage_amount)
-		print(name, " atacou! Dano: ", damage_amount)
 
 
-## Atualiza o cooldown a cada frame
 func _update_cooldown(delta: float) -> void:
 	if _attack_cooldown_remaining > 0:
 		_attack_cooldown_remaining -= delta
-
-
-## Sobrescrever _process para atualizar cooldown
-func _process(delta: float) -> void:
-	_update_cooldown(delta)

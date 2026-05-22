@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cmmcrvkfc24g7"]
 
-[ext_resource type="Script" uid="uid://dn252tmnihf8h" path="res://scenes/enemies/enemy_melee.gd" id="1_3xip1"]
+[ext_resource type="Script" uid="uid://byu1tkgylpvrm" path="res://scripts/enemies/enemy_melee.gd" id="1_3xip1"]
 [ext_resource type="Texture2D" uid="uid://bh6qb37fqp2vc" path="res://icon.svg" id="2_g4syg"]
 
 [sub_resource type="CircleShape2D" id="Shape_enemy"]
