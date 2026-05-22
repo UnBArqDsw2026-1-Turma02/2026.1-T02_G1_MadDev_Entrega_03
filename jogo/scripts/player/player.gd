@@ -17,6 +17,7 @@ extends CharacterBody2D
 @export var max_health: int = 100
 @export var base_damage: int = 10
 @export var defense: int = 0
+@export var resistance: float = 0.0
 
 var current_health: int = max_health
 
@@ -122,13 +123,25 @@ func _shoot() -> void:
 # ---------------------------------------------------------------------------
 # Vida (Observer via sinais)
 # ---------------------------------------------------------------------------
+@export var damage_chain: DamageHandler
+
+# Sua função atualizada para usar a cadeia
 func take_damage(amount: int) -> void:
-	var damage: int = maxi(0, amount - defense)
-	current_health = maxi(0, current_health - damage)
+	if not damage_chain:
+		apply_final_damage(amount)
+		return
+		
+	var context = {"target": self}
+	damage_chain.handle(amount, context)
+
+func apply_final_damage(final_damage: int) -> void:
+	current_health = maxi(0, current_health - final_damage)
+	
 	GameMediator.notify(self, GameMediator.EVENT_PLAYER_HEALTH_CHANGED, {
 		"new_health": current_health,
 		"max_health": max_health,
 	})
+	
 	if current_health == 0:
 		_die()
 

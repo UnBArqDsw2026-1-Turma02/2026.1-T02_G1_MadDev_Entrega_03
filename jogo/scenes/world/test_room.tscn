@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://dsawei2qls5mw" path="res://scripts/enemies/basic_enemy_spawner.gd" id="7_6s7be"]
 [ext_resource type="Script" uid="uid://c7lt8ue0cwaui" path="res://scripts/enemies/ranged_enemy_spawner.gd" id="7_u3u0o"]
 [ext_resource type="Script" uid="uid://bdpmnpb2mo3c2" path="res://scripts/world/projectile_pool.gd" id="8_vnu35"]
+[ext_resource type="Script" uid="uid://dufe3k8xbiit8" path="res://scripts/damage_tester.gd" id="10_knp17"]
+[ext_resource type="Resource" uid="uid://uly6i7c31ll8" path="res://scripts/damage/armor_handler.tres" id="11_kkuu3"]
 
 [node name="TestRoom" type="Node2D" unique_id=2062937570]
 
@@ -45,3 +47,8 @@ script = ExtResource("8_vnu35")
 [node name="spawn" type="Node2D" parent="." unique_id=1541222538]
 position = Vector2(417, 216)
 script = ExtResource("7_u3u0o")
+
+[node name="DamageTester" type="Node" parent="." unique_id=596121806]
+script = ExtResource("10_knp17")
+damage_chain = ExtResource("11_kkuu3")
+metadata/_custom_type_script = "uid://dufe3k8xbiit8"
