@@ -19,6 +19,7 @@ class_name HUDAbstraction
 @onready var _score_label: Label = $VBoxContainer/ScoreLabel
 @onready var _time_label: Label = $VBoxContainer/TimeLabel
 @onready var _consumable_bar: HBoxContainer = $VBoxContainer/ConsumableRow
+@onready var _achievement_label: Label = $VBoxContainer/AchievementLabel
 
 # ---------------------------------------------------------------------------
 # Estado do cronômetro da run
@@ -30,6 +31,7 @@ var _time_running: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_achievement_label.visible = false
 	if renderer != null:
 		renderer.bind({
 			"hp_bar": _hp_bar,
@@ -43,6 +45,7 @@ func _ready() -> void:
 	SignalBus.run_started.connect(_on_run_started)
 	SignalBus.run_ended.connect(_on_run_ended)
 	SignalBus.game_paused.connect(_on_game_paused)
+	SignalBus.achievement_unlocked.connect(_on_achievement_unlocked)
 
 
 func _process(delta: float) -> void:
@@ -61,6 +64,11 @@ func _render_hp(value: float, max_value: float) -> void:
 		renderer.render_hp(value, max_value)
 
 
+func _render_score(value: int) -> void:
+	if renderer != null:
+		renderer.render_score(value)
+
+
 # ---------------------------------------------------------------------------
 # Observer — receptores de eventos do SignalBus
 # ---------------------------------------------------------------------------
@@ -69,8 +77,7 @@ func _on_player_health_changed(new_health: int, max_health: int) -> void:
 
 
 func _on_score_changed(new_score: int) -> void:
-	if renderer != null:
-		renderer.render_score(new_score)
+	_render_score(new_score)
 
 
 func _on_run_started() -> void:
@@ -86,6 +93,13 @@ func _on_run_ended(_victory: bool) -> void:
 
 func _on_game_paused(is_paused: bool) -> void:
 	_time_running = _run_active and not is_paused
+
+
+func _on_achievement_unlocked(achievement: Achievement) -> void:
+	_achievement_label.text = "Conquista: %s" % achievement.name
+	_achievement_label.visible = true
+	await get_tree().create_timer(3.0).timeout
+	_achievement_label.visible = false
 
 
 # ---------------------------------------------------------------------------
