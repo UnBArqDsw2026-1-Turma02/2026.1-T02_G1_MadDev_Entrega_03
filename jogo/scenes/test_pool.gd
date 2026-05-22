@@ -27,8 +27,8 @@ func _ready():
 	# Mostra status após disparos
 	print("Após disparos: ", pool.get_pool_status())
 	
-	# Aguarda 2 segundos para os projéteis morrerem
-	await get_tree().create_timer(2.0).timeout
-	
+	# Aguarda além do lifetime (3.0s) para garantir que os projéteis retornaram ao pool
+	await get_tree().create_timer(4.0).timeout
+
 	# Mostra status final (projéteis devem ter voltado ao pool)
-	print("Após 2 segundos: ", pool.get_pool_status())
+	print("Após 4 segundos: ", pool.get_pool_status())

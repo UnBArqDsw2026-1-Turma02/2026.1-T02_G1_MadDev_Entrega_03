@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://cjmvr30banf21"]
 
-[ext_resource type="Script" uid="uid://cne5a4y2x7b1m" path="res://scripts/enemies/enemy_base.gd" id="1_e33yw"]
+[ext_resource type="Script" uid="uid://dixe1hl7b0opk" path="res://scripts/enemies/enemy_ranged.gd" id="1_ranged"]
 [ext_resource type="Texture2D" uid="uid://bh6qb37fqp2vc" path="res://icon.svg" id="2_y38ht"]
 
 [sub_resource type="CircleShape2D" id="Shape_enemy"]
-radius = 8.0
+radius = 60.827625
 
 [node name="Enemy" type="CharacterBody2D" unique_id=647062463]
 collision_layer = 4
 collision_mask = 2
-script = ExtResource("1_e33yw")
+script = ExtResource("1_ranged")
 max_health = 20
 attack_damage = 3
 move_speed = 40.0
