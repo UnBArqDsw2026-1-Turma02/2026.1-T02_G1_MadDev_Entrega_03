@@ -17,7 +17,7 @@ extends CharacterBody2D
 @export var max_health: int = 100
 @export var base_damage: int = 10
 @export var defense: int = 0
-@export var resistance: int = 0
+@export var resistance: float = 0.0
 
 var current_health: int = max_health
 

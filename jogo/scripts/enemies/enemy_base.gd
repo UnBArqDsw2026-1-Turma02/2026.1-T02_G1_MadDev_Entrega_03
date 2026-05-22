@@ -10,7 +10,7 @@ extends CharacterBody2D
 # ---------------------------------------------------------------------------
 @export var max_health: int = 30
 @export var defense: int = 0
-@export var resistance: int = 0
+@export var resistance: float = 0.0
 @export var attack_damage: int = 5
 @export var move_speed: float = 60.0
 
