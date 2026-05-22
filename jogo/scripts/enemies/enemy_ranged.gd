@@ -1,49 +1,62 @@
-## Inimigo à distância - ataque com projétil
-extends "res://scripts/enemies/enemy_base.gd"
+## Factory/Strategy Pattern — inimigo de longa distância.
+## Sobrescreve _get_move_direction() para manter distância do player (Strategy).
+## Dispara projéteis via Object Pool sem criar/destruir nós.
+class_name EnemyRanged
+extends EnemyBase
 
-## Tempo de preparação do tiro
-@export var shoot_preparation_time: float = 0.5
+# ---------------------------------------------------------------------------
+# Configuração exportada
+# ---------------------------------------------------------------------------
+@export var shoot_interval: float = 2.0
+@export var preferred_distance: float = 150.0
+
+# ---------------------------------------------------------------------------
+# Estado interno
+# ---------------------------------------------------------------------------
+var _shoot_timer: float = 0.0
+var _player: Node2D = null
+var _pool: ProjectilePool = null
 
 
-## Sobrescreve a verificação de ataque (precisa de linha de visão)
-func can_attack() -> bool:
+# ---------------------------------------------------------------------------
+# Lifecycle
+# ---------------------------------------------------------------------------
+func _ready() -> void:
+	super._ready()
+	_player = get_tree().get_first_node_in_group("player") as Node2D
+	var pools := get_tree().get_nodes_in_group("projectile_pool")
+	if pools.size() > 0:
+		_pool = pools[0] as ProjectilePool
+
+
+# ---------------------------------------------------------------------------
+# Strategy — mantém distância preferida do player
+# ---------------------------------------------------------------------------
+func _get_move_direction() -> Vector2:
+	if _player == null:
+		return Vector2.ZERO
+	var dist: float = global_position.distance_to(_player.global_position)
+	var to_player: Vector2 = global_position.direction_to(_player.global_position)
+	if dist > preferred_distance:
+		return to_player
+	elif dist < preferred_distance * 0.7:
+		return -to_player
+	return Vector2.ZERO
+
+
+# ---------------------------------------------------------------------------
+# Disparo — acumula timer e dispara via pool
+# ---------------------------------------------------------------------------
+func _physics_process(delta: float) -> void:
 	if _is_dead:
-		return false
-	
-	# Verifica se o jogador está perto o suficiente
-	var player = get_tree().get_first_node_in_group("player")
-	if player == null:
-		return false
-	
-	var distance = global_position.distance_to(player.global_position)
-	return distance <= 150.0  # Alcance do ranged
+		return
+	_shoot_timer += delta
+	if _shoot_timer >= shoot_interval and _player != null and _pool != null:
+		_shoot_timer = 0.0
+		_shoot()
+	super._physics_process(delta)
 
 
-## Sobrescreve a preparação do ataque
-func prepare_attack() -> void:
-	print(name, " mira no jogador...")
-	# Aguarda um pouco antes de atirar
-	await get_tree().create_timer(shoot_preparation_time).timeout
-
-
-## Sobrescreve a execução do ataque
-func execute_attack() -> void:
-	print(name, " DISPAROU PROJÉTIL!")
-	
-	# Encontra o pool de projéteis
-	var pool = get_node("/root/TestRoom/ProjectilePool")
-	if pool == null:
-		pool = get_tree().get_first_node_in_group("projectile_pool")
-	
-	if pool and pool.has_method("get_projectile"):
-		var direction = Vector2.RIGHT
-		var player = get_tree().get_first_node_in_group("player")
-		if player:
-			direction = (player.global_position - global_position).normalized()
-		
-		var projectile = pool.get_projectile(global_position, direction)
-		if projectile:
-			projectile.damage = attack_damage
-	else:
-		# Fallback: dano direto se não tiver pool
-		_apply_damage_to_player(attack_damage)
+func _shoot() -> void:
+	var dir: Vector2 = global_position.direction_to(_player.global_position)
+	_pool.get_projectile(global_position, dir, self)

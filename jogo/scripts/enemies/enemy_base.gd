@@ -2,6 +2,7 @@
 ## State Pattern   — subclasses implementarão estados de IA.
 ## Observer Pattern — emite eventos via GameMediator.
 ## Chain of Responsibility — take_damage() será o ponto de entrada da cadeia de dano.
+class_name EnemyBase
 extends CharacterBody2D
 
 # ---------------------------------------------------------------------------
