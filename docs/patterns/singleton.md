@@ -236,14 +236,28 @@ GameManager (Singleton)          PlayerProgressManager (Singleton)
 
 ---
 
-## 6. Referências
+## 6. Metodologia
+
+A construção desta documentação seguiu três etapas, todas tomando como fonte primária o código da branch `game` do repositório:
+
+1. **[Levantamento dos Singletons existentes](#_3-singletons-do-projeto).** Leitura do bloco `[autoload]` em `jogo/project.godot` para identificar os scripts registrados como Autoload — implementação nativa de Singleton no Godot 4 (ver [Sistema de Autoload](#_2-singleton-no-godot-sistema-de-autoload)). Para cada autoload, o arquivo `.gd`/`.tscn` correspondente foi inspecionado em `jogo/scripts/autoloads/` e `jogo/scripts/resources/`, mapeando estado mantido, métodos públicos e sinais emitidos.
+
+2. **[Auditoria de uso](#_4-auditoria-de-anti-padrões).** Para cada singleton, foi realizada busca textual (ripgrep) no diretório `jogo/scripts/` pelo nome do autoload, listando todos os scripts consumidores. Cada referência foi classificada em três categorias: (a) chamada a método público, (b) emissão ou conexão de sinal, ou (c) acesso direto a propriedade interna — esta última caracterizando violação de encapsulamento. Os 8 scripts da [tabela de Violações de Encapsulamento](#_41-violações-de-encapsulamento) foram revisados manualmente e nenhum acesso da categoria (c) foi encontrado.
+
+3. **[Classificação Singleton vs. Multiton](#_34-studentprofileregistry).** Realizada por análise do estado mantido pelo autoload: o `StudentProfileRegistry` foi classificado como Multiton porque o `_cache` mantém N instâncias indexadas por chave (`"Calouro"`, `"Veterano"`, `"Jubilado"`, `"Cara da Atletica"`), em contraste com os demais autoloads que mantêm exatamente uma instância global. A distinção foi cruzada com a referência do GoF original (ver [Referências](#_7-referências)).
+
+**Ferramentas utilizadas:** Godot 4 (validação de registro e execução dos autoloads), ripgrep (busca de referências cruzadas), Git/GitHub (versionamento e revisão por PR), Markdown + Docsify (apresentação). Antes da submissão, a documentação foi revisada por outro membro do grupo para conferência factual contra o código.
+
+---
+
+## 7. Referências
 
 - [Godot Docs - Singletons / Autoload](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html)
 - [Refactoring Guru - Singleton](https://refactoring.guru/design-patterns/singleton)
 - [GOF - Design Patterns: Elements of Reusable Object-Oriented Software](https://www.amazon.com.br/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612)
 
-## Versionamento
+## Histórico de Versionamento
 
-| Versão | Data       | Descrição                        | Autor(es)                         |
-|--------|------------|----------------------------------|-----------------------------------|
-| 1.0    | 18/05/2026 | Criação da documentação          | Philipe Morais   |
+| Nome                                                     | Alteração                | Versão | Data       | Revisor                                     | Data de Revisão | Revisão                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------------------------- | ------------------------ | ------ | ---------- | ------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Philipe Morais](https://github.com/PhMoraiis/)          | Criação da documentação  | v1.0   | 18/05/2026 | [Felipe Verissimo](https://github.com/verissimoo) | 21/05/2026      | Documentação completa dos 4 singletons; auditoria dos 8 scripts validada contra a branch `game` sem violações e classificação Singleton/Multiton bem fundamentada. |
