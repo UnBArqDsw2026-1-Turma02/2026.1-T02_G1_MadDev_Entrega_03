@@ -26,7 +26,7 @@ var current_room: Node2D = null
 func start_run() -> void:
 	reset_run()
 	current_state = GameState.PLAYING
-	GameMediator.notify(self, GameMediator.EVENT_RUN_STARTED)
+	SignalBus.run_started.emit()
 
 
 ## Reseta TODO o estado volátil da run (Permadeath).
@@ -40,19 +40,19 @@ func reset_run() -> void:
 
 func end_run(victory: bool) -> void:
 	current_state = GameState.VICTORY if victory else GameState.GAME_OVER
-	GameMediator.notify(self, GameMediator.EVENT_RUN_ENDED, {"victory": victory})
+	SignalBus.run_ended.emit(victory)
 
 
 func toggle_pause() -> void:
 	var is_paused: bool = current_state != GameState.PAUSED
 	current_state = GameState.PAUSED if is_paused else GameState.PLAYING
 	get_tree().paused = is_paused
-	GameMediator.notify(self, GameMediator.EVENT_GAME_PAUSED, {"is_paused": is_paused})
+	SignalBus.game_paused.emit(is_paused)
 
 
 func add_score(amount: int) -> void:
 	run_score += amount
-	GameMediator.notify(self, GameMediator.EVENT_SCORE_CHANGED, {"new_score": run_score})
+	SignalBus.score_changed.emit(run_score)
 
 
 func load_room(room_type: String, difficulty: int = 1) -> void:

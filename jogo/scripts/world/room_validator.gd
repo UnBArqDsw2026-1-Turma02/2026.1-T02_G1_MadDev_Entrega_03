@@ -1,7 +1,7 @@
 ## Visitor Pattern — visita cada inimigo ativo e cada porta da sala para determinar
 ## se o estado da sala mudou (todos mortos → destrava portas).
 ## Coloque um nó com este script em cada sala de combate.
-## Registra handlers no GameMediator via código (nó instanciado em runtime).
+## Escuta os eventos de inimigo no SignalBus (nó instanciado em runtime).
 extends Node
 
 # IDs das portas que este validador controla (preencha via inspetor).
@@ -12,13 +12,15 @@ var _enemies_killed: int = 0
 
 
 func _ready() -> void:
-	GameMediator.register(GameMediator.EVENT_ENEMY_SPAWNED, _on_mediator_enemy_spawned)
-	GameMediator.register(GameMediator.EVENT_ENEMY_DIED, _on_mediator_enemy_died)
+	SignalBus.enemy_spawned.connect(_on_enemy_spawned)
+	SignalBus.enemy_died.connect(_on_enemy_died)
 
 
 func _exit_tree() -> void:
-	GameMediator.unregister(GameMediator.EVENT_ENEMY_SPAWNED, _on_mediator_enemy_spawned)
-	GameMediator.unregister(GameMediator.EVENT_ENEMY_DIED, _on_mediator_enemy_died)
+	if SignalBus.enemy_spawned.is_connected(_on_enemy_spawned):
+		SignalBus.enemy_spawned.disconnect(_on_enemy_spawned)
+	if SignalBus.enemy_died.is_connected(_on_enemy_died):
+		SignalBus.enemy_died.disconnect(_on_enemy_died)
 
 
 # ---------------------------------------------------------------------------
@@ -42,19 +44,12 @@ func visit_door(door: Node) -> void:
 
 
 # ---------------------------------------------------------------------------
-# Receptores do GameMediator
+# Receptores do SignalBus
 # ---------------------------------------------------------------------------
-func _on_mediator_enemy_spawned(_sender: Object, _event: StringName, data: Dictionary) -> void:
-	var enemy: Node = data.get("enemy") as Node
+func _on_enemy_spawned(enemy: Node) -> void:
 	if enemy != null:
 		_total_enemies += 1
 		visit_enemy(enemy)
-
-
-func _on_mediator_enemy_died(sender: Object, _event: StringName, data: Dictionary) -> void:
-	var enemy: Node = data.get("enemy", sender) as Node
-	if enemy != null:
-		_on_enemy_died(enemy)
 
 
 func _on_enemy_died(_enemy: Node) -> void:
@@ -76,7 +71,7 @@ func _validate() -> void:
 			if door.get("door_id") == door_id:
 				visit_door(door)
 
-	GameMediator.notify(self, GameMediator.EVENT_ROOM_CLEARED)
+	SignalBus.room_cleared.emit()
 
 
 func _is_room_cleared() -> bool:

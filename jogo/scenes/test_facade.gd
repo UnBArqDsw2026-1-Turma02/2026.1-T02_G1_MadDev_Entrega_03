@@ -1,7 +1,7 @@
 ## Teste do Facade Pattern.
 ## Rode esta cena com F6. Resultados aparecem no painel Output.
 ## Valida que GameFacade delega corretamente para cada subsistema
-## e que os sinais fluem via GameMediator → SignalBus (sem bypass).
+## e que os sinais são publicados no SignalBus.
 extends Node
 
 # ---------------------------------------------------------------------------

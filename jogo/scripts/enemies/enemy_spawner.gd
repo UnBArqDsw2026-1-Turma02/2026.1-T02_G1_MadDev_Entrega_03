@@ -16,7 +16,7 @@ func spawn() -> CharacterBody2D:
 	enemy.position = get_parent().to_local(global_position)
 	enemy.add_to_group("enemies")
 	get_parent().add_child.call_deferred(enemy)
-	GameMediator.notify.call_deferred(self, GameMediator.EVENT_ENEMY_SPAWNED, {"enemy": enemy})
+	SignalBus.enemy_spawned.emit.call_deferred(enemy)
 	return enemy
 
 func _create_enemy() -> CharacterBody2D:

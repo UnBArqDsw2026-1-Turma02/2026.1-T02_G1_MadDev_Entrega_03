@@ -13,6 +13,7 @@ signal player_leveled_up(new_level: int)
 # ---------------------------------------------------------------------------
 # Inimigos
 # ---------------------------------------------------------------------------
+signal enemy_spawned(enemy: Node)
 signal enemy_died(enemy: Node)
 signal all_enemies_cleared()
 

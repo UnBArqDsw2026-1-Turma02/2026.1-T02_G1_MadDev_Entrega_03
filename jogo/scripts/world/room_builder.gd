@@ -3,10 +3,6 @@
 class_name RoomBuilder
 extends RoomBuilderBase
 
-const _ENEMY_SCENES: Dictionary = {
-	&"basic":  "res://scenes/enemies/enemy.tscn",
-	&"ranged": "res://scenes/enemies/enemy_ranged.tscn",
-}
 const _ITEM_SCENE: String = "res://scenes/consumables/consumable.tscn"
 
 var _room_name: String = "Sala"
@@ -90,9 +86,7 @@ func build() -> Node2D:
 			enemy.position = enemy_data["pos"]
 			enemy.add_to_group("enemies")
 			room.add_child(enemy)
-			GameMediator.notify.call_deferred(
-				enemy, GameMediator.EVENT_ENEMY_SPAWNED, {"enemy": enemy}
-			)
+			SignalBus.enemy_spawned.emit.call_deferred(enemy)
 
 	# 6. Itens consumíveis
 	for item_data in _item_list:
@@ -146,11 +140,7 @@ func _create_door(position: Vector2, door_id: String) -> StaticBody2D:
 
 
 func _create_enemy(type: StringName) -> CharacterBody2D:
-	var path: String = _ENEMY_SCENES.get(type, _ENEMY_SCENES[&"basic"])
-	var scene := load(path) as PackedScene
-	if scene == null:
-		return null
-	return scene.instantiate()
+	return EnemyFactory.create(type)
 
 
 func _create_item(type: StringName) -> Node:

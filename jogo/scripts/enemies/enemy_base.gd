@@ -1,6 +1,6 @@
 ## Factory/Prototype Pattern — classe base de todos os inimigos.
 ## State Pattern   — subclasses implementarão estados de IA.
-## Observer Pattern — emite eventos via GameMediator.
+## Observer Pattern — emite eventos via SignalBus.
 ## Chain of Responsibility — take_damage() será o ponto de entrada da cadeia de dano.
 class_name EnemyBase
 extends CharacterBody2D
@@ -53,7 +53,7 @@ func _die() -> void:
 	if _is_dead:
 		return
 	_is_dead = true
-	GameMediator.notify(self, GameMediator.EVENT_ENEMY_DIED, {"enemy": self})
+	SignalBus.enemy_died.emit(self)
 	queue_free()
 
 
