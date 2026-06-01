@@ -1,5 +1,5 @@
 ## Command/Adapter Pattern — leitura de input separada da execução de movimento.
-## Observer Pattern  — eventos publicados via GameMediator notificam sistemas interessados.
+## Observer Pattern  — eventos publicados no SignalBus notificam sistemas interessados.
 ## Object Pool      — disparo de projéteis via ProjectilePool (sem instantiate/queue_free).
 extends CharacterBody2D
 
@@ -136,26 +136,20 @@ func take_damage(amount: int) -> void:
 
 func apply_final_damage(final_damage: int) -> void:
 	current_health = maxi(0, current_health - final_damage)
-	
-	GameMediator.notify(self, GameMediator.EVENT_PLAYER_HEALTH_CHANGED, {
-		"new_health": current_health,
-		"max_health": max_health,
-	})
-	
+
+	SignalBus.player_health_changed.emit(current_health, max_health)
+
 	if current_health == 0:
 		_die()
 
 
 func heal(amount: int) -> void:
 	current_health = mini(max_health, current_health + amount)
-	GameMediator.notify(self, GameMediator.EVENT_PLAYER_HEALTH_CHANGED, {
-		"new_health": current_health,
-		"max_health": max_health,
-	})
+	SignalBus.player_health_changed.emit(current_health, max_health)
 
 
 func _die() -> void:
-	GameMediator.notify(self, GameMediator.EVENT_PLAYER_DIED)
+	SignalBus.player_died.emit()
 
 
 # ---------------------------------------------------------------------------

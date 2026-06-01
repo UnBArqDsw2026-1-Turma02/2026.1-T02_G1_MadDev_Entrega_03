@@ -55,36 +55,36 @@ func award_points(amount: int) -> void:
 
 
 # ---------------------------------------------------------------------------
-# Métodos de Eventos (via GameMediator → SignalBus)
-# Toda emissão de evento passa pelo Mediator para manter o desacoplamento.
+# Métodos de Eventos (publicados no SignalBus)
+# A Facade expõe verbos simples; o SignalBus é o hub de eventos do jogo.
 # ---------------------------------------------------------------------------
 
 ## Notifica que o jogador morreu
 func emit_player_died() -> void:
-	GameMediator.notify(self, GameMediator.EVENT_PLAYER_DIED)
+	SignalBus.player_died.emit()
 
 
 ## Notifica que um inimigo morreu
 ## @param enemy: Referência ao inimigo que morreu
 func emit_enemy_died(enemy: Node) -> void:
-	GameMediator.notify(self, GameMediator.EVENT_ENEMY_DIED, {"enemy": enemy})
+	SignalBus.enemy_died.emit(enemy)
 
 
 ## Notifica que a sala foi limpa (todos os inimigos eliminados)
 func emit_room_cleared() -> void:
-	GameMediator.notify(self, GameMediator.EVENT_ROOM_CLEARED)
+	SignalBus.room_cleared.emit()
 
 
 ## Notifica mudança de pontuação
 ## @param new_score: Nova pontuação
 func emit_score_changed(new_score: int) -> void:
-	GameMediator.notify(self, GameMediator.EVENT_SCORE_CHANGED, {"new_score": new_score})
+	SignalBus.score_changed.emit(new_score)
 
 
 ## Notifica estado de pausa
 ## @param is_paused: true se pausado, false se despausado
 func emit_game_paused(is_paused: bool) -> void:
-	GameMediator.notify(self, GameMediator.EVENT_GAME_PAUSED, {"is_paused": is_paused})
+	SignalBus.game_paused.emit(is_paused)
 
 
 # ---------------------------------------------------------------------------
