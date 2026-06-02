@@ -5,6 +5,15 @@ extends RoomBuilderBase
 
 const _ITEM_SCENE: String = "res://scenes/consumables/consumable.tscn"
 
+# Tileset room.tres: source 0 = piso (sem colisão), source 1 = parede (colisão, layer 2).
+const _FLOOR_SOURCE: int = 0
+const _WALL_SOURCE: int = 1
+const _TILE_ATLAS: Vector2i = Vector2i(0, 0)
+# Limites da sala em tiles — folgados o bastante para conter todas as receitas
+# do Director (portas e player_start ficam no piso; paredes só na borda externa).
+const _ROOM_MIN: Vector2i = Vector2i(-5, -9)
+const _ROOM_MAX: Vector2i = Vector2i(20, 17)
+
 var _room_name: String = "Sala"
 var _enemy_list: Array[Dictionary] = []
 var _item_list: Array[Dictionary] = []
@@ -62,42 +71,34 @@ func set_tilemap(tilemap_path: String) -> RoomBuilderBase:
 func build() -> Node2D:
 	var room := Node2D.new()
 	room.name = _room_name
+	# A sala guarda só o ponto de entrada; o player é persistente e pertence ao
+	# controlador de Run (decisão A2), que o reposiciona aqui a cada carga.
+	room.set_meta("player_start", _player_start_position)
 
 	# 1. Chão / paredes
 	room.add_child(_create_tilemap())
 
-	# 2. Jogador
-	room.add_child(_create_player())
-
-	# 3. Portas com IDs únicos
+	# 2. Portas com IDs únicos (trancadas se a sala tiver inimigos a derrotar)
+	var has_enemies: bool = not _enemy_list.is_empty()
 	var door_ids: Array[String] = []
 	for i in range(_door_positions.size()):
 		var door_id := "door_%d" % i
-		room.add_child(_create_door(_door_positions[i], door_id))
+		room.add_child(_create_door(_door_positions[i], door_id, has_enemies))
 		door_ids.append(door_id)
 
-	# 4. Validator ciente das portas desta sala
+	# 3. Validator ciente das portas desta sala
 	room.add_child(_create_room_validator(door_ids))
 
-	# 5. Inimigos — notificação de spawn adiada para após _ready() do validator
-	for enemy_data in _enemy_list:
-		var enemy := _create_enemy(enemy_data["type"])
-		if enemy:
-			enemy.position = enemy_data["pos"]
-			enemy.add_to_group("enemies")
-			room.add_child(enemy)
-			SignalBus.enemy_spawned.emit.call_deferred(enemy)
+	# 4. Inimigos: guardados em meta; o controlador de Run os spawna APÓS posicionar
+	# o player na sala (evita nascer cercado). As portas já trancam pela lista existir.
+	room.set_meta("enemies", _enemy_list.duplicate())
 
-	# 6. Itens consumíveis
+	# 5. Itens consumíveis
 	for item_data in _item_list:
 		var item := _create_item(item_data["type"])
 		if item:
 			item.position = item_data["pos"]
 			room.add_child(item)
-
-	# 7. HUD e pausa
-	room.add_child(_create_hud())
-	room.add_child(_create_pause_layer())
 
 	return room
 
@@ -111,15 +112,20 @@ func _create_tilemap() -> TileMapLayer:
 	var tileset = load(_tilemap_source)
 	if tileset:
 		tilemap.tile_set = tileset
+		_paint_room(tilemap)
 	return tilemap
 
 
-func _create_player() -> CharacterBody2D:
-	var scene := load("res://scenes/player/player.tscn") as PackedScene
-	var player: CharacterBody2D = scene.instantiate()
-	player.name = "Player"
-	player.position = _player_start_position
-	return player
+## Pinta um piso retangular com uma borda de paredes (estas têm colisão via tileset).
+func _paint_room(tilemap: TileMapLayer) -> void:
+	for tx in range(_ROOM_MIN.x, _ROOM_MAX.x + 1):
+		for ty in range(_ROOM_MIN.y, _ROOM_MAX.y + 1):
+			var is_border: bool = (
+				tx == _ROOM_MIN.x or tx == _ROOM_MAX.x
+				or ty == _ROOM_MIN.y or ty == _ROOM_MAX.y
+			)
+			var source: int = _WALL_SOURCE if is_border else _FLOOR_SOURCE
+			tilemap.set_cell(Vector2i(tx, ty), source, _TILE_ATLAS)
 
 
 func _create_room_validator(door_ids: Array[String]) -> Node:
@@ -130,17 +136,14 @@ func _create_room_validator(door_ids: Array[String]) -> Node:
 	return validator
 
 
-func _create_door(position: Vector2, door_id: String) -> StaticBody2D:
+func _create_door(position: Vector2, door_id: String, locked: bool) -> StaticBody2D:
 	var scene := load("res://scenes/world/door.tscn") as PackedScene
 	var door: StaticBody2D = scene.instantiate()
 	door.position = position
 	door.name = "Door_" + door_id
 	door.set("door_id", door_id)
+	door.set("starts_locked", locked)
 	return door
-
-
-func _create_enemy(type: StringName) -> CharacterBody2D:
-	return EnemyFactory.create(type)
 
 
 func _create_item(type: StringName) -> Node:
@@ -150,22 +153,3 @@ func _create_item(type: StringName) -> Node:
 	var item := scene.instantiate()
 	item.set("consumable_name", str(type))
 	return item
-
-
-func _create_hud() -> CanvasLayer:
-	var hud_layer := CanvasLayer.new()
-	hud_layer.name = "HUD"
-	var hud := (load("res://scenes/ui/hud.tscn") as PackedScene).instantiate()
-	hud.name = "HUDContent"
-	hud_layer.add_child(hud)
-	return hud_layer
-
-
-func _create_pause_layer() -> CanvasLayer:
-	var pause_layer := CanvasLayer.new()
-	pause_layer.name = "PauseLayer"
-	pause_layer.layer = 10
-	var pause_menu := (load("res://scenes/ui/pause_menu.tscn") as PackedScene).instantiate()
-	pause_menu.name = "PauseMenu"
-	pause_layer.add_child(pause_menu)
-	return pause_layer

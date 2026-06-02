@@ -70,15 +70,21 @@ func _process(delta: float) -> void:
 # Colisão — conecte body_entered ou area_entered via inspetor
 # ---------------------------------------------------------------------------
 func apply_damage_to(target: Node) -> void:
+	# Sem atirador válido (ex: projétil perdido) → apenas some, sem dano.
+	if _shooter == null or not is_instance_valid(_shooter):
+		call_deferred("disable")
+		return
 	if target == _shooter:
 		return
-	var shooter_is_enemy: bool = _shooter != null and _shooter.is_in_group("enemy")
-	if shooter_is_enemy and not target.is_in_group("player"):
+	var shooter_is_enemy: bool = _shooter.is_in_group("enemy")
+	# Fogo amigo: passa direto pelo mesmo time, sem dano e sem sumir.
+	if shooter_is_enemy and target.is_in_group("enemy"):
 		return
-	if not shooter_is_enemy and not target.is_in_group("enemy"):
+	if not shooter_is_enemy and target.is_in_group("player"):
 		return
+	# Alvo válido (inimigo/player) ou parede → aplica dano se houver e some.
 	if target.has_method("take_damage"):
 		target.take_damage(damage)
-	# Não chamar disable() diretamente aqui: sinais de colisão rodam durante o
-	# passo físico e o engine trava modificações em monitoring/process_mode.
+	# disable adiado: sinais de colisão rodam no passo físico, que trava mudanças
+	# de monitoring/process_mode.
 	call_deferred("disable")

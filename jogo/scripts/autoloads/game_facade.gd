@@ -38,9 +38,9 @@ func reset_game_state() -> void:
 
 
 ## Finaliza a run atual
-## @param victory: true se venceu, false se perdeu
-func end_run(victory: bool) -> void:
-	GameManager.end_run(victory)
+## @param is_victory: true se venceu, false se perdeu
+func end_run(is_victory: bool) -> void:
+	GameManager.end_run(is_victory)
 
 
 ## Pausa ou despausa o jogo

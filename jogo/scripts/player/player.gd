@@ -20,6 +20,7 @@ extends CharacterBody2D
 @export var resistance: float = 0.0
 
 var current_health: int = max_health
+var _is_dead: bool = false
 
 # ---------------------------------------------------------------------------
 # Object Pool — pool de projéteis do player
@@ -149,7 +150,10 @@ func heal(amount: int) -> void:
 
 
 func _die() -> void:
-	SignalBus.player_died.emit()
+	if _is_dead:
+		return
+	_is_dead = true
+	GameFacade.kill_player()
 
 
 # ---------------------------------------------------------------------------

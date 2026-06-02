@@ -23,6 +23,7 @@ signal all_enemies_cleared()
 signal room_entered(room_id: int)
 signal room_cleared()
 signal door_lock_changed(door_id: String, locked: bool)
+signal door_entered(door_id: String)
 
 # ---------------------------------------------------------------------------
 # Itens / Inventário

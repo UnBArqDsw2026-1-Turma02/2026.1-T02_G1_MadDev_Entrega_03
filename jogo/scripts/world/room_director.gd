@@ -15,21 +15,21 @@ func set_builder(builder: RoomBuilderBase) -> void:
 func build_combat_room(difficulty: int = 1) -> Node2D:
 	_builder.set_room_name("Sala de Combate")
 	_builder.set_player_start(Vector2(152, 112))
-	_builder.set_exits([Vector2(-44, -106)])
+	_builder.set_exits([Vector2(-44, -106), Vector2(300, -106)])
 
 	match difficulty:
 		1:
-			_builder.add_enemy(&"basic", Vector2(100, 100))
-			_builder.add_enemy(&"basic", Vector2(200, 100))
+			_builder.add_enemy(&"melee", Vector2(100, 100))
+			_builder.add_enemy(&"melee", Vector2(200, 100))
 		2:
-			_builder.add_enemy(&"basic", Vector2(80, 100))
+			_builder.add_enemy(&"melee", Vector2(80, 100))
 			_builder.add_enemy(&"ranged", Vector2(220, 100))
-			_builder.add_enemy(&"basic", Vector2(150, 200))
+			_builder.add_enemy(&"melee", Vector2(150, 200))
 		3:
 			_builder.add_enemy(&"ranged", Vector2(80, 80))
-			_builder.add_enemy(&"basic", Vector2(200, 80))
+			_builder.add_enemy(&"melee", Vector2(200, 80))
 			_builder.add_enemy(&"ranged", Vector2(140, 180))
-			_builder.add_enemy(&"basic", Vector2(80, 200))
+			_builder.add_enemy(&"melee", Vector2(80, 200))
 
 	if difficulty >= 2:
 		_builder.add_item(&"health", Vector2(300, 150))
@@ -53,9 +53,9 @@ func build_boss_room() -> Node2D:
 	_builder.set_exits([Vector2(152, -100)])
 	_builder.add_enemy(&"ranged", Vector2(100, 80))
 	_builder.add_enemy(&"ranged", Vector2(200, 80))
-	_builder.add_enemy(&"basic", Vector2(150, 50))
+	_builder.add_enemy(&"melee", Vector2(150, 50))
 	for i in range(3):
-		_builder.add_enemy(&"basic", Vector2(60 + i * 50, 150))
+		_builder.add_enemy(&"melee", Vector2(60 + i * 50, 150))
 	return _builder.build()
 
 
